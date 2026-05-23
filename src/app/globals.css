@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-ink text-zinc-100 antialiased;
+  background-image:
+    radial-gradient(600px circle at 80% -10%, rgba(59, 130, 246, 0.12), transparent 60%),
+    radial-gradient(700px circle at 0% 10%, rgba(35, 196, 160, 0.08), transparent 55%);
+  background-attachment: fixed;
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+
+  .card {
+    @apply rounded-2xl border border-white/10 bg-ink-soft/70 backdrop-blur-sm;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white transition hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-zinc-200 transition hover:border-white/40 hover:bg-white/5;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300;
+  }
+
+  .progress-track {
+    @apply h-2 w-full overflow-hidden rounded-full bg-white/10;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full bg-gradient-to-r from-accent-steppe to-accent;
+  }
+}
