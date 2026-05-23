@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import EventsClient from "./EventsClient";
+import { getEvents } from "@/lib/queries";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Events",
   description: "Discover Kazakh community events across the USA on an interactive map.",
 };
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const events = await getEvents();
   return (
     <div className="container-page py-14">
       <h1 className="text-3xl font-bold sm:text-4xl">Events</h1>
@@ -15,7 +19,7 @@ export default function EventsPage() {
         United States.
       </p>
       <div className="mt-10">
-        <EventsClient />
+        <EventsClient events={events} />
       </div>
     </div>
   );

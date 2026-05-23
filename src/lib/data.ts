@@ -334,10 +334,6 @@ export const campaigns: Campaign[] = [
   },
 ];
 
-export function getCampaign(id: string): Campaign | undefined {
-  return campaigns.find((c) => c.id === id);
-}
-
 export const sponsors = [
   "Steppe Ventures",
   "Almaty Capital",

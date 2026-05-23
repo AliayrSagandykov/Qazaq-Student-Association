@@ -4,14 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import Progress from "@/components/Progress";
-import { campaigns } from "@/lib/data";
+import type { Campaign } from "@/lib/data";
 
 const ALL = "All";
 type SortKey = "urgency" | "mostRaised" | "leastFunded";
 
 const urgencyRank = { High: 3, Medium: 2, Low: 1 } as const;
 
-export default function CrowdfundingClient() {
+export default function CrowdfundingClient({ campaigns }: { campaigns: Campaign[] }) {
   const [degree, setDegree] = useState(ALL);
   const [sort, setSort] = useState<SortKey>("urgency");
 
