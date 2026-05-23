@@ -53,6 +53,28 @@ back to mock data otherwise — so you can connect the database without touching
 Once the variables are set, the directory, events, and crowdfunding pages read live
 data from Postgres. Pages use ISR (`revalidate = 300`), so changes appear within ~5 minutes.
 
+## Authentication
+
+Auth uses **Supabase Auth** with cookie-based sessions (`@supabase/ssr`). The same two
+env vars above enable it — no extra config for email/password.
+
+- `/login` — email/password sign in & sign up, plus "Continue with Google".
+- `/account` — signed-in user's account page with sign out.
+- `src/middleware.ts` refreshes the session on every request.
+- `/auth/callback` exchanges the OAuth / email-confirmation code for a session.
+
+### Supabase dashboard setup
+
+1. **Authentication → URL Configuration**: add your site URL and the redirect
+   `https://<your-domain>/auth/callback` (and `http://localhost:3000/auth/callback` for local dev).
+2. **Email/password** works out of the box (toggle "Confirm email" as you prefer).
+3. **Google** (optional): Authentication → Providers → Google → enable, then paste a
+   Client ID / Secret from a Google Cloud OAuth credential whose authorized redirect URI is
+   `https://<project-ref>.supabase.co/auth/v1/callback`.
+
+When the env vars are absent, the login page shows a friendly "not configured" notice and
+the rest of the site keeps working on mock data.
+
 ## Project structure
 
 ```

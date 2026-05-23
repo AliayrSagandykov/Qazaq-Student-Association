@@ -234,7 +234,7 @@ export default async function Home() {
               talent abroad.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/directory" className="btn-primary">
+              <Link href="/login" className="btn-primary">
                 Create your profile
               </Link>
               <Link href="/crowdfunding" className="btn-ghost">

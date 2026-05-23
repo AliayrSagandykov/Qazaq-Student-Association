@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 const links = [
   { href: "/directory", label: "Directory" },
@@ -7,6 +11,18 @@ const links = [
 ];
 
 export default function Navbar() {
+  const [signedIn, setSignedIn] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    if (!supabase) return;
+    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
+      setSignedIn(Boolean(session?.user)),
+    );
+    return () => sub.subscription.unsubscribe();
+  }, [supabase]);
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/70 backdrop-blur-xl">
       <nav className="container-page flex h-16 items-center justify-between">
@@ -30,12 +46,20 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link href="/directory" className="hidden text-sm text-zinc-300 hover:text-white sm:block">
-            Sign in
-          </Link>
-          <Link href="/crowdfunding" className="btn-primary !px-5 !py-2">
-            Join
-          </Link>
+          {signedIn ? (
+            <Link href="/account" className="btn-primary !px-5 !py-2">
+              Account
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="hidden text-sm text-zinc-300 hover:text-white sm:block">
+                Sign in
+              </Link>
+              <Link href="/login" className="btn-primary !px-5 !py-2">
+                Join
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </header>
