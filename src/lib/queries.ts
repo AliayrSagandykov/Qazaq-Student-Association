@@ -14,20 +14,24 @@ import {
 
 type Row = Record<string, unknown>;
 
+function str(v: unknown): string {
+  return v == null ? "" : String(v);
+}
+
 function mapMember(r: Row): Member {
   return {
     id: String(r.id),
-    name: String(r.name),
-    university: String(r.university),
-    major: String(r.major),
-    degree: r.degree as Member["degree"],
-    gradYear: Number(r.grad_year),
-    state: String(r.state),
-    city: String(r.city),
-    industry: String(r.industry),
+    name: str(r.name),
+    university: str(r.university),
+    major: str(r.major),
+    degree: (r.degree as Member["degree"]) ?? "Bachelor's",
+    gradYear: r.grad_year == null ? 0 : Number(r.grad_year),
+    state: str(r.state),
+    city: str(r.city),
+    industry: str(r.industry),
     isAlumni: Boolean(r.is_alumni),
-    bio: String(r.bio),
-    initials: String(r.initials),
+    bio: str(r.bio),
+    initials: str(r.initials),
   };
 }
 
@@ -79,7 +83,13 @@ function mapCampaign(r: Row): Campaign {
 export async function getMembers(): Promise<Member[]> {
   const db = getSupabase();
   if (!db) return mockMembers;
-  const { data, error } = await db.from("profiles").select("*").order("name");
+  // Only list profiles that have been filled in enough to be useful.
+  const { data, error } = await db
+    .from("profiles")
+    .select("*")
+    .not("university", "is", null)
+    .neq("university", "")
+    .order("name");
   if (error || !data) return mockMembers;
   return data.map(mapMember);
 }
