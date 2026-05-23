@@ -3,14 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-
-const links = [
-  { href: "/directory", label: "Directory" },
-  { href: "/events", label: "Events" },
-  { href: "/crowdfunding", label: "Crowdfunding" },
-];
+import { useApp } from "@/components/Providers";
+import { LanguageSwitcher, ThemeToggle } from "@/components/Controls";
 
 export default function Navbar() {
+  const { t } = useApp();
   const [signedIn, setSignedIn] = useState(false);
   const supabase = createClient();
 
@@ -23,14 +20,20 @@ export default function Navbar() {
     return () => sub.subscription.unsubscribe();
   }, [supabase]);
 
+  const links = [
+    { href: "/directory", label: t.nav.directory },
+    { href: "/events", label: t.nav.events },
+    { href: "/crowdfunding", label: t.nav.crowdfunding },
+  ];
+
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/70 backdrop-blur-xl">
-      <nav className="container-page flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-50 border-b border-line/10 bg-bg/70 backdrop-blur-xl">
+      <nav className="container-page flex h-16 items-center justify-between gap-3">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-accent to-accent-steppe text-sm font-bold text-white">
             Q
           </span>
-          <span className="text-zinc-100">QSA</span>
+          <span className="text-fg">QSA</span>
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
@@ -38,27 +41,24 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className="rounded-full px-4 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
+              className="rounded-full px-4 py-2 text-sm text-fg-muted transition hover:bg-line/5 hover:text-fg"
             >
               {l.label}
             </Link>
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <LanguageSwitcher />
+          <ThemeToggle />
           {signedIn ? (
             <Link href="/account" className="btn-primary !px-5 !py-2">
-              Account
+              {t.nav.account}
             </Link>
           ) : (
-            <>
-              <Link href="/login" className="hidden text-sm text-zinc-300 hover:text-white sm:block">
-                Sign in
-              </Link>
-              <Link href="/login" className="btn-primary !px-5 !py-2">
-                Join
-              </Link>
-            </>
+            <Link href="/login" className="btn-primary !px-5 !py-2">
+              {t.nav.join}
+            </Link>
           )}
         </div>
       </nav>

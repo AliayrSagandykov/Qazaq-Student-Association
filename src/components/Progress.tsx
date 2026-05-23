@@ -14,8 +14,8 @@ export default function Progress({ raised, target }: { raised: number; target: n
         <div className="progress-fill" style={{ width: `${pct}%` }} />
       </div>
       <div className="mt-2 flex items-center justify-between text-sm">
-        <span className="font-semibold text-white">{formatUSD(raised)}</span>
-        <span className="text-zinc-400">
+        <span className="font-semibold text-fg">{formatUSD(raised)}</span>
+        <span className="text-fg-muted">
           {pct}% of {formatUSD(target)}
         </span>
       </div>

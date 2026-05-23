@@ -58,13 +58,6 @@ export interface Campaign {
   updates: { date: string; text: string }[];
 }
 
-export const stats = [
-  { label: "Active members", value: "4,200+" },
-  { label: "Universities", value: "180+" },
-  { label: "Events hosted", value: "320" },
-  { label: "Raised for students", value: "$1.4M" },
-];
-
 export const members: Member[] = [
   {
     id: "m1",
@@ -331,35 +324,5 @@ export const campaigns: Campaign[] = [
       { donor: "Daniyar S.", amount: 500, anonymous: false },
     ],
     updates: [{ date: "2026-04-20", text: "Almost funded — 90% reached!" }],
-  },
-];
-
-export const sponsors = [
-  "Steppe Ventures",
-  "Almaty Capital",
-  "Diaspora Tech Fund",
-  "Nomad Labs",
-  "Tien Shan Partners",
-  "Silk Road Foundation",
-];
-
-export const testimonials = [
-  {
-    quote:
-      "QSA connected me with an alumni mentor who helped me land my first internship in the Bay Area. This community changes lives.",
-    name: "Aisha N.",
-    role: "Master's, Stanford",
-  },
-  {
-    quote:
-      "When my tuition fell short, the crowdfunding community had my back. I graduated debt-free and now I give back.",
-    name: "Timur A.",
-    role: "Alumni, UC Berkeley",
-  },
-  {
-    quote:
-      "The Nauryz gathering felt like home, thousands of miles away. I found my closest friends here.",
-    name: "Madina O.",
-    role: "Bachelor's, Harvard",
   },
 ];

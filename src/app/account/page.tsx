@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient, isAuthConfigured } from "@/lib/supabase/client";
+import { useApp } from "@/components/Providers";
 import Avatar from "@/components/Avatar";
 
 export default function AccountPage() {
   const router = useRouter();
+  const { t } = useApp();
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const supabase = createClient();
@@ -33,14 +35,14 @@ export default function AccountPage() {
 
   if (!isAuthConfigured) {
     return (
-      <div className="container-page py-24 text-center text-zinc-400">
-        Authentication is not configured yet.
+      <div className="container-page py-24 text-center text-fg-muted">
+        {t.account.notConfigured}
       </div>
     );
   }
 
   if (!ready) {
-    return <div className="container-page py-24 text-center text-zinc-400">Loading…</div>;
+    return <div className="container-page py-24 text-center text-fg-muted">{t.account.loading}</div>;
   }
 
   if (!user) return null;
@@ -55,19 +57,19 @@ export default function AccountPage() {
 
   return (
     <div className="container-page py-16">
-      <h1 className="text-3xl font-bold">Your account</h1>
+      <h1 className="text-3xl font-bold">{t.account.title}</h1>
       <div className="card mt-8 max-w-xl p-8">
         <div className="flex items-center gap-4">
           <Avatar initials={initials} size="lg" />
           <div>
-            <p className="font-semibold text-white">{name}</p>
-            <p className="text-sm text-zinc-400">{user.email}</p>
+            <p className="font-semibold text-fg">{name}</p>
+            <p className="text-sm text-fg-muted">{user.email}</p>
           </div>
         </div>
         <dl className="mt-6 space-y-2 text-sm">
-          <div className="flex justify-between border-t border-white/10 pt-3">
-            <dt className="text-zinc-500">Member since</dt>
-            <dd className="text-zinc-200">
+          <div className="flex justify-between border-t border-line/10 pt-3">
+            <dt className="text-fg-muted/70">{t.account.memberSince}</dt>
+            <dd className="text-fg">
               {new Date(user.created_at).toLocaleDateString("en-US", {
                 month: "long",
                 year: "numeric",
@@ -75,19 +77,17 @@ export default function AccountPage() {
             </dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-zinc-500">Sign-in method</dt>
-            <dd className="text-zinc-200 capitalize">
+            <dt className="text-fg-muted/70">{t.account.method}</dt>
+            <dd className="text-fg capitalize">
               {user.app_metadata?.provider ?? "email"}
             </dd>
           </div>
         </dl>
         <button onClick={signOut} className="btn-ghost mt-8">
-          Sign out
+          {t.account.signOut}
         </button>
       </div>
-      <p className="mt-6 max-w-xl text-sm text-zinc-500">
-        Profile editing, campaign creation, and event RSVPs are next on the roadmap.
-      </p>
+      <p className="mt-6 max-w-xl text-sm text-fg-muted/70">{t.account.roadmap}</p>
     </div>
   );
 }
