@@ -11,16 +11,5 @@ export const metadata: Metadata = {
 
 export default async function DirectoryPage() {
   const members = await getMembers();
-  return (
-    <div className="container-page py-14">
-      <h1 className="text-3xl font-bold sm:text-4xl">Community Directory</h1>
-      <p className="mt-3 max-w-2xl text-zinc-400">
-        Discover students and alumni across the network. Filter by university, major, state,
-        industry, graduation year, and degree.
-      </p>
-      <div className="mt-10">
-        <DirectoryClient members={members} />
-      </div>
-    </div>
-  );
+  return <DirectoryClient members={members} />;
 }

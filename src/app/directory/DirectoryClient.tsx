@@ -2,15 +2,13 @@
 
 import { useMemo, useState } from "react";
 import Avatar from "@/components/Avatar";
+import { useApp } from "@/components/Providers";
 import type { Member } from "@/lib/data";
 
-const ALL = "All";
-
-function unique(values: string[]): string[] {
-  return [ALL, ...Array.from(new Set(values)).sort()];
-}
-
 export default function DirectoryClient({ members }: { members: Member[] }) {
+  const { t } = useApp();
+  const ALL = t.crowdfunding.all;
+
   const [query, setQuery] = useState("");
   const [university, setUniversity] = useState(ALL);
   const [major, setMajor] = useState(ALL);
@@ -18,10 +16,11 @@ export default function DirectoryClient({ members }: { members: Member[] }) {
   const [degree, setDegree] = useState(ALL);
   const [onlyAlumni, setOnlyAlumni] = useState(false);
 
-  const universities = useMemo(() => unique(members.map((m) => m.university)), [members]);
-  const majors = useMemo(() => unique(members.map((m) => m.major)), [members]);
-  const states = useMemo(() => unique(members.map((m) => m.state)), [members]);
-  const degrees = useMemo(() => unique(members.map((m) => m.degree)), [members]);
+  const unique = (values: string[]) => [ALL, ...Array.from(new Set(values)).sort()];
+  const universities = useMemo(() => unique(members.map((m) => m.university)), [members, ALL]);
+  const majors = useMemo(() => unique(members.map((m) => m.major)), [members, ALL]);
+  const states = useMemo(() => unique(members.map((m) => m.state)), [members, ALL]);
+  const degrees = useMemo(() => unique(members.map((m) => m.degree)), [members, ALL]);
 
   const filtered = members.filter((m) => {
     const q = query.trim().toLowerCase();
@@ -42,52 +41,47 @@ export default function DirectoryClient({ members }: { members: Member[] }) {
   });
 
   const selectClass =
-    "rounded-lg border border-white/10 bg-ink-soft px-3 py-2 text-sm text-zinc-200 outline-none focus:border-accent/60";
+    "rounded-lg border border-line/10 bg-surface px-3 py-2 text-sm text-fg outline-none focus:border-accent/60";
 
   return (
-    <div>
-      <div className="card p-5">
+    <div className="container-page py-14">
+      <h1 className="text-3xl font-bold sm:text-4xl">{t.directory.title}</h1>
+      <p className="mt-3 max-w-2xl text-fg-muted">{t.directory.sub}</p>
+
+      <div className="mt-10 card p-5">
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name, major, university, or industry…"
-          className="w-full rounded-lg border border-white/10 bg-ink px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-500 focus:border-accent/60"
+          placeholder={t.directory.searchPlaceholder}
+          className="w-full rounded-lg border border-line/10 bg-bg px-4 py-3 text-sm text-fg outline-none placeholder:text-fg-muted/60 focus:border-accent/60"
         />
         <div className="mt-4 flex flex-wrap gap-3">
           <select value={university} onChange={(e) => setUniversity(e.target.value)} className={selectClass}>
-            {universities.map((u) => (
-              <option key={u}>{u}</option>
-            ))}
+            {universities.map((u) => <option key={u}>{u}</option>)}
           </select>
           <select value={major} onChange={(e) => setMajor(e.target.value)} className={selectClass}>
-            {majors.map((m) => (
-              <option key={m}>{m}</option>
-            ))}
+            {majors.map((m) => <option key={m}>{m}</option>)}
           </select>
           <select value={state} onChange={(e) => setState(e.target.value)} className={selectClass}>
-            {states.map((s) => (
-              <option key={s}>{s}</option>
-            ))}
+            {states.map((s) => <option key={s}>{s}</option>)}
           </select>
           <select value={degree} onChange={(e) => setDegree(e.target.value)} className={selectClass}>
-            {degrees.map((d) => (
-              <option key={d}>{d}</option>
-            ))}
+            {degrees.map((d) => <option key={d}>{d}</option>)}
           </select>
-          <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/10 bg-ink-soft px-3 py-2 text-sm text-zinc-200">
+          <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-line/10 bg-surface px-3 py-2 text-sm text-fg">
             <input
               type="checkbox"
               checked={onlyAlumni}
               onChange={(e) => setOnlyAlumni(e.target.checked)}
               className="accent-accent"
             />
-            Alumni only
+            {t.directory.alumniOnly}
           </label>
         </div>
       </div>
 
-      <p className="mt-6 text-sm text-zinc-400">
-        {filtered.length} {filtered.length === 1 ? "member" : "members"}
+      <p className="mt-6 text-sm text-fg-muted">
+        {filtered.length} {filtered.length === 1 ? t.directory.resultsOne : t.directory.resultsMany}
       </p>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -95,29 +89,23 @@ export default function DirectoryClient({ members }: { members: Member[] }) {
           <div key={m.id} className="card p-6">
             <div className="flex items-start justify-between">
               <Avatar initials={m.initials} size="lg" />
-              {m.isAlumni && <span className="chip">Alumni</span>}
+              {m.isAlumni && <span className="chip">{t.directory.alumni}</span>}
             </div>
-            <h3 className="mt-4 font-semibold text-white">{m.name}</h3>
-            <p className="text-sm text-zinc-400">
-              {m.major} · {m.degree}
-            </p>
-            <p className="mt-1 text-xs text-zinc-500">{m.university}</p>
-            <p className="mt-3 text-sm text-zinc-400">{m.bio}</p>
+            <h3 className="mt-4 font-semibold text-fg">{m.name}</h3>
+            <p className="text-sm text-fg-muted">{m.major} · {m.degree}</p>
+            <p className="mt-1 text-xs text-fg-muted/70">{m.university}</p>
+            <p className="mt-3 text-sm text-fg-muted">{m.bio}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="chip">{m.industry}</span>
-              <span className="chip">
-                {m.city}, {m.state}
-              </span>
-              <span className="chip">Class of {m.gradYear}</span>
+              <span className="chip">{m.city}, {m.state}</span>
+              <span className="chip">{t.directory.classOf} {m.gradYear}</span>
             </div>
           </div>
         ))}
       </div>
 
       {filtered.length === 0 && (
-        <div className="card mt-4 p-10 text-center text-zinc-400">
-          No members match your filters yet.
-        </div>
+        <div className="card mt-4 p-10 text-center text-fg-muted">{t.directory.empty}</div>
       )}
     </div>
   );

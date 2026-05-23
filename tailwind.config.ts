@@ -7,11 +7,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: {
-          DEFAULT: "#0a0a0f",
-          soft: "#15151f",
-          muted: "#1e1e2b",
-        },
+        bg: "rgb(var(--bg) / <alpha-value>)",
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        fg: "rgb(var(--fg) / <alpha-value>)",
+        "fg-muted": "rgb(var(--fg-muted) / <alpha-value>)",
+        line: "rgb(var(--line) / <alpha-value>)",
         accent: {
           DEFAULT: "#3b82f6",
           gold: "#e9b949",
