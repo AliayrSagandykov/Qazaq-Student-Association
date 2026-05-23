@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import CrowdfundingClient from "./CrowdfundingClient";
+import { getCampaigns } from "@/lib/queries";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Crowdfunding",
   description: "Support Kazakh students through verified crowdfunding campaigns.",
 };
 
-export default function CrowdfundingPage() {
+export default async function CrowdfundingPage() {
+  const campaigns = await getCampaigns();
   return (
     <div className="container-page py-14">
       <h1 className="text-3xl font-bold sm:text-4xl">Student Crowdfunding</h1>
@@ -15,7 +19,7 @@ export default function CrowdfundingPage() {
         before publishing.
       </p>
       <div className="mt-10">
-        <CrowdfundingClient />
+        <CrowdfundingClient campaigns={campaigns} />
       </div>
     </div>
   );

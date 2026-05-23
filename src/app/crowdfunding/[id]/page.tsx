@@ -3,12 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import Progress, { formatUSD } from "@/components/Progress";
-import { campaigns, getCampaign } from "@/lib/data";
+import { getCampaignById } from "@/lib/queries";
 import DonatePanel from "./DonatePanel";
 
-export function generateStaticParams() {
-  return campaigns.map((c) => ({ id: c.id }));
-}
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
@@ -16,13 +14,13 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const c = getCampaign(id);
+  const c = await getCampaignById(id);
   return { title: c ? `${c.studentName} — Campaign` : "Campaign" };
 }
 
 export default async function CampaignPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const c = getCampaign(id);
+  const c = await getCampaignById(id);
   if (!c) notFound();
 
   const publicDonors = [...c.donors].sort((a, b) => b.amount - a.amount);

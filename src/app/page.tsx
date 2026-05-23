@@ -2,7 +2,10 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Avatar from "@/components/Avatar";
 import Progress from "@/components/Progress";
-import { stats, members, events, campaigns, sponsors, testimonials } from "@/lib/data";
+import { stats, sponsors, testimonials } from "@/lib/data";
+import { getMembers, getEvents, getCampaigns } from "@/lib/queries";
+
+export const revalidate = 300;
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -12,9 +15,15 @@ function formatDate(iso: string) {
   });
 }
 
-export default function Home() {
+export default async function Home() {
+  const [members, events, allCampaigns] = await Promise.all([
+    getMembers(),
+    getEvents(),
+    getCampaigns(),
+  ]);
   const featured = members.slice(0, 4);
   const upcoming = [...events].sort((a, b) => +new Date(a.date) - +new Date(b.date)).slice(0, 3);
+  const campaigns = allCampaigns.slice(0, 3);
 
   return (
     <div className="overflow-hidden">

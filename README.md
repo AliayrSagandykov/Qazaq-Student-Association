@@ -32,6 +32,27 @@ npm run dev      # http://localhost:3000
 npm run build    # production build
 ```
 
+Without any environment variables the app serves the mock data in `src/lib/data.ts`,
+so it builds and deploys out of the box.
+
+## Connecting Supabase
+
+The data layer (`src/lib/queries.ts`) reads from Supabase when configured and falls
+back to mock data otherwise — so you can connect the database without touching the UI.
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. In the **SQL Editor**, run `supabase/schema.sql`, then `supabase/seed.sql`.
+3. Copy `Project Settings → API → Project URL` and the `anon` key.
+4. Locally: copy `.env.example` to `.env.local` and fill in:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=...
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+   ```
+5. On Vercel: add the same two variables under **Settings → Environment Variables**, then redeploy.
+
+Once the variables are set, the directory, events, and crowdfunding pages read live
+data from Postgres. Pages use ISR (`revalidate = 300`), so changes appear within ~5 minutes.
+
 ## Project structure
 
 ```

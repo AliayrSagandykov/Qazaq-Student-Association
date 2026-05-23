@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Avatar from "@/components/Avatar";
-import { members } from "@/lib/data";
+import type { Member } from "@/lib/data";
 
 const ALL = "All";
 
@@ -10,7 +10,7 @@ function unique(values: string[]): string[] {
   return [ALL, ...Array.from(new Set(values)).sort()];
 }
 
-export default function DirectoryClient() {
+export default function DirectoryClient({ members }: { members: Member[] }) {
   const [query, setQuery] = useState("");
   const [university, setUniversity] = useState(ALL);
   const [major, setMajor] = useState(ALL);
@@ -18,10 +18,10 @@ export default function DirectoryClient() {
   const [degree, setDegree] = useState(ALL);
   const [onlyAlumni, setOnlyAlumni] = useState(false);
 
-  const universities = useMemo(() => unique(members.map((m) => m.university)), []);
-  const majors = useMemo(() => unique(members.map((m) => m.major)), []);
-  const states = useMemo(() => unique(members.map((m) => m.state)), []);
-  const degrees = useMemo(() => unique(members.map((m) => m.degree)), []);
+  const universities = useMemo(() => unique(members.map((m) => m.university)), [members]);
+  const majors = useMemo(() => unique(members.map((m) => m.major)), [members]);
+  const states = useMemo(() => unique(members.map((m) => m.state)), [members]);
+  const degrees = useMemo(() => unique(members.map((m) => m.degree)), [members]);
 
   const filtered = members.filter((m) => {
     const q = query.trim().toLowerCase();

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { events, type PlatformEvent } from "@/lib/data";
+import type { PlatformEvent } from "@/lib/data";
 
 // Continental-US bounding box for a simple equirectangular projection.
 const BOUNDS = { minLng: -125, maxLng: -66, minLat: 24, maxLat: 50 };
@@ -22,10 +22,15 @@ function formatDateTime(iso: string) {
   });
 }
 
-export default function EventsClient() {
-  const [view, setView] = useState<"map" | "list">("map");
-  const [selected, setSelected] = useState<PlatformEvent>(events[0]);
+export default function EventsClient({ events }: { events: PlatformEvent[] }) {
   const sorted = [...events].sort((a, b) => +new Date(a.date) - +new Date(b.date));
+  const [view, setView] = useState<"map" | "list">("map");
+  const [selectedId, setSelectedId] = useState<string | null>(sorted[0]?.id ?? null);
+  const selected = sorted.find((e) => e.id === selectedId) ?? sorted[0];
+
+  if (!selected) {
+    return <div className="card p-10 text-center text-zinc-400">No events scheduled yet.</div>;
+  }
 
   return (
     <div>
@@ -60,7 +65,7 @@ export default function EventsClient() {
               return (
                 <button
                   key={e.id}
-                  onClick={() => setSelected(e)}
+                  onClick={() => setSelectedId(e.id)}
                   style={{ left: `${x}%`, top: `${y}%` }}
                   className="group absolute -translate-x-1/2 -translate-y-1/2"
                   aria-label={e.title}
