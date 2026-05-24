@@ -35,6 +35,7 @@ export interface PlatformEvent {
   lng: number;
   attendees: number;
   category: "Meetup" | "Conference" | "Nauryz" | "Startup" | "Networking";
+  ownerId?: string;
 }
 
 export interface DonationEntry {
@@ -72,6 +73,7 @@ export interface Campaign {
   verified: boolean;
   donors: DonationEntry[];
   updates: { date: string; text: string }[];
+  avatarUrl?: string;
 }
 
 export const members: Member[] = [

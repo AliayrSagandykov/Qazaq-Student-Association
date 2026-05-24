@@ -60,7 +60,7 @@ export default function CrowdfundingClient({ campaigns }: { campaigns: Campaign[
           >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <Avatar initials={c.initials} />
+                <Avatar initials={c.initials} src={c.avatarUrl} />
                 <div>
                   <h3 className="font-semibold text-fg">{c.studentName}</h3>
                   <p className="text-xs text-fg-muted/70">{c.university}</p>

@@ -25,7 +25,7 @@ export default function CampaignDetail({ c }: { c: Campaign }) {
             <div className="h-40 bg-gradient-to-br from-accent/30 via-accent-steppe/20 to-accent-gold/20" />
             <div className="p-6">
               <div className="-mt-14 flex items-end gap-4">
-                <Avatar initials={c.initials} size="lg" />
+                <Avatar initials={c.initials} src={c.avatarUrl} size="lg" />
                 <div className="pb-1">
                   <h1 className="text-2xl font-bold text-fg">{c.studentName}</h1>
                   <p className="text-sm text-fg-muted">
