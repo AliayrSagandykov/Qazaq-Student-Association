@@ -156,6 +156,10 @@ export interface Dictionary {
     secured: string;
     thanks: string;
     demoNote: string;
+    customAmount: string;
+    donorName: string;
+    processing: string;
+    donatedSuccess: string;
   };
   login: {
     welcome: string;
@@ -396,7 +400,11 @@ export const translations: Record<Locale, Dictionary> = {
       donate: "Donate",
       secured: "Secured by Stripe · PCI-compliant",
       thanks: "Thank you! Your pledge is recorded.",
-      demoNote: "(Demo only — Stripe checkout is wired in production.)",
+      demoNote: "(Demo only — add Stripe keys to take real payments.)",
+      customAmount: "Or enter a custom amount",
+      donorName: "Name on the donor wall (optional)",
+      processing: "Redirecting to checkout…",
+      donatedSuccess: "Thank you for your donation! It may take a moment to appear.",
     },
     login: {
       welcome: "Welcome back",
@@ -636,7 +644,11 @@ export const translations: Record<Locale, Dictionary> = {
       donate: "Қолдау көрсету",
       secured: "Stripe арқылы қорғалған · PCI стандарты",
       thanks: "Рақмет! Сіздің жарнаңыз тіркелді.",
-      demoNote: "(Демо ғана — Stripe төлемі өндірісте қосылады.)",
+      demoNote: "(Демо ғана — нақты төлем үшін Stripe кілттерін қосыңыз.)",
+      customAmount: "Немесе өз сомаңызды енгізіңіз",
+      donorName: "Демеушілер қабырғасындағы атыңыз (міндетті емес)",
+      processing: "Төлемге бағыттауда…",
+      donatedSuccess: "Қайырымдылығыңызға рақмет! Көріну үшін біраз уақыт кетуі мүмкін.",
     },
     login: {
       welcome: "Қайта келдіңіз",
@@ -876,7 +888,11 @@ export const translations: Record<Locale, Dictionary> = {
       donate: "Поддержать",
       secured: "Защищено Stripe · стандарт PCI",
       thanks: "Спасибо! Ваш взнос записан.",
-      demoNote: "(Только демо — оплата Stripe подключается в продакшене.)",
+      demoNote: "(Только демо — добавьте ключи Stripe для реальных платежей.)",
+      customAmount: "Или введите свою сумму",
+      donorName: "Имя на стене доноров (необязательно)",
+      processing: "Перенаправляем на оплату…",
+      donatedSuccess: "Спасибо за пожертвование! Оно появится через мгновение.",
     },
     login: {
       welcome: "С возвращением",

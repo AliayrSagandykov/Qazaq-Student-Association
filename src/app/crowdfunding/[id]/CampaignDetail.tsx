@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Avatar from "@/components/Avatar";
 import Progress, { formatUSD } from "@/components/Progress";
 import { useApp } from "@/components/Providers";
@@ -9,6 +10,7 @@ import DonatePanel from "./DonatePanel";
 
 export default function CampaignDetail({ c }: { c: Campaign }) {
   const { t } = useApp();
+  const donated = useSearchParams().get("donated") === "1";
   const publicDonors = [...c.donors].sort((a, b) => b.amount - a.amount);
 
   return (
@@ -71,11 +73,16 @@ export default function CampaignDetail({ c }: { c: Campaign }) {
 
         <aside className="space-y-6 lg:sticky lg:top-20 lg:self-start">
           <div className="card p-6">
+            {donated && (
+              <div className="mb-4 rounded-xl border border-accent-steppe/30 bg-accent-steppe/10 p-3 text-sm text-fg">
+                {t.campaign.donatedSuccess}
+              </div>
+            )}
             <Progress raised={c.raised} target={c.target} />
             <p className="mt-4 text-sm text-fg-muted">
-              {c.donors.length} {t.campaign.donors} · {formatUSD(c.target - c.raised)} {t.campaign.toGo}
+              {c.donors.length} {t.campaign.donors} · {formatUSD(Math.max(0, c.target - c.raised))} {t.campaign.toGo}
             </p>
-            <DonatePanel />
+            <DonatePanel campaignId={c.id} />
           </div>
 
           <div className="card p-6">

@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { getCampaignById } from "@/lib/queries";
 import CampaignDetail from "./CampaignDetail";
 
-export const revalidate = 300;
+// Render on each request so a new donation's progress shows immediately.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
