@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/Providers";
 import type { PlatformEvent } from "@/lib/data";
 
@@ -24,10 +26,64 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
       minute: "2-digit",
     });
 
+  const router = useRouter();
+  const supabase = createClient();
   const sorted = [...events].sort((a, b) => +new Date(a.date) - +new Date(b.date));
   const [view, setView] = useState<"map" | "list">("map");
   const [selectedId, setSelectedId] = useState<string | null>(sorted[0]?.id ?? null);
   const selected = sorted.find((e) => e.id === selectedId) ?? sorted[0];
+
+  const [userId, setUserId] = useState<string | null>(null);
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  const [mine, setMine] = useState<Set<string>>(new Set());
+  const [busy, setBusy] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!supabase || events.length === 0) return;
+    const ids = events.map((e) => e.id);
+    (async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      setUserId(auth.user?.id ?? null);
+      const { data } = await supabase
+        .from("event_rsvps")
+        .select("event_id, user_id")
+        .in("event_id", ids);
+      const c: Record<string, number> = {};
+      const m = new Set<string>();
+      (data ?? []).forEach((r: { event_id: string; user_id: string }) => {
+        c[r.event_id] = (c[r.event_id] ?? 0) + 1;
+        if (r.user_id === auth.user?.id) m.add(r.event_id);
+      });
+      setCounts(c);
+      setMine(m);
+    })();
+  }, [supabase, events]);
+
+  async function toggleRsvp(eventId: string) {
+    if (!supabase) return;
+    if (!userId) {
+      router.push("/login");
+      return;
+    }
+    setBusy(eventId);
+    const going = mine.has(eventId);
+    if (going) {
+      await supabase.from("event_rsvps").delete().eq("event_id", eventId).eq("user_id", userId);
+      setMine((s) => {
+        const n = new Set(s);
+        n.delete(eventId);
+        return n;
+      });
+      setCounts((c) => ({ ...c, [eventId]: Math.max(0, (c[eventId] ?? 1) - 1) }));
+    } else {
+      await supabase.from("event_rsvps").insert({ event_id: eventId, user_id: userId });
+      setMine((s) => new Set(s).add(eventId));
+      setCounts((c) => ({ ...c, [eventId]: (c[eventId] ?? 0) + 1 }));
+    }
+    setBusy(null);
+  }
+
+  const attendingCount = (e: PlatformEvent) => e.attendees + (counts[e.id] ?? 0);
 
   return (
     <div className="container-page py-14">
@@ -111,10 +167,16 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
                   </div>
                   <div className="flex justify-between">
                     <dt className="text-fg-muted/70">{t.events.attending}</dt>
-                    <dd className="text-fg">{selected.attendees}</dd>
+                    <dd className="text-fg">{attendingCount(selected)}</dd>
                   </div>
                 </dl>
-                <button className="btn-primary mt-6 w-full">{t.events.rsvp}</button>
+                <button
+                  onClick={() => toggleRsvp(selected.id)}
+                  disabled={busy === selected.id}
+                  className={`mt-6 w-full disabled:opacity-60 ${mine.has(selected.id) ? "btn-ghost" : "btn-primary"}`}
+                >
+                  {mine.has(selected.id) ? t.events.cancel : t.events.rsvp}
+                </button>
               </div>
             </div>
           ) : (
@@ -128,9 +190,15 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
                   <h3 className="mt-3 text-lg font-semibold text-fg">{e.title}</h3>
                   <p className="mt-2 text-sm text-fg-muted">{e.description}</p>
                   <p className="mt-4 text-xs text-fg-muted/70">
-                    {e.venue} · {e.city}, {e.state} · {e.attendees} {t.events.attendingShort}
+                    {e.venue} · {e.city}, {e.state} · {attendingCount(e)} {t.events.attendingShort}
                   </p>
-                  <button className="btn-ghost mt-5 w-full !py-2">{t.events.rsvp}</button>
+                  <button
+                    onClick={() => toggleRsvp(e.id)}
+                    disabled={busy === e.id}
+                    className={`mt-5 w-full !py-2 disabled:opacity-60 ${mine.has(e.id) ? "btn-primary" : "btn-ghost"}`}
+                  >
+                    {mine.has(e.id) ? t.events.going : t.events.rsvp}
+                  </button>
                 </div>
               ))}
             </div>
