@@ -109,7 +109,11 @@ export async function getEvents(): Promise<PlatformEvent[]> {
 export async function getCampaigns(): Promise<Campaign[]> {
   const db = getSupabase();
   if (!db) return mockCampaigns;
-  const { data, error } = await db.from("campaigns").select("*").order("created_at");
+  const { data, error } = await db
+    .from("campaigns")
+    .select("*")
+    .eq("status", "approved")
+    .order("created_at");
   if (error || !data) return mockCampaigns;
   return data.map(mapCampaign);
 }

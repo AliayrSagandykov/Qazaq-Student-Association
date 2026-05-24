@@ -30,8 +30,15 @@ export default function CrowdfundingClient({ campaigns }: { campaigns: Campaign[
 
   return (
     <div className="container-page py-14">
-      <h1 className="text-3xl font-bold sm:text-4xl">{t.crowdfunding.title}</h1>
-      <p className="mt-3 max-w-2xl text-fg-muted">{t.crowdfunding.sub}</p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold sm:text-4xl">{t.crowdfunding.title}</h1>
+          <p className="mt-3 max-w-2xl text-fg-muted">{t.crowdfunding.sub}</p>
+        </div>
+        <Link href="/crowdfunding/new" className="btn-primary">
+          {t.crowdfunding.start}
+        </Link>
+      </div>
 
       <div className="mt-10 flex flex-wrap items-center gap-3">
         <select value={degree} onChange={(e) => setDegree(e.target.value)} className={selectClass}>
