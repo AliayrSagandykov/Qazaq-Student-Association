@@ -88,6 +88,8 @@ export interface Dictionary {
     organizer: string;
     attending: string;
     attendingShort: string;
+    going: string;
+    cancel: string;
     empty: string;
     mapLabel: string;
   };
@@ -327,6 +329,8 @@ export const translations: Record<Locale, Dictionary> = {
       organizer: "Organizer",
       attending: "Attending",
       attendingShort: "attending",
+      going: "You're going",
+      cancel: "Cancel RSVP",
       empty: "No events scheduled yet.",
       mapLabel: "Interactive map · USA",
     },
@@ -565,6 +569,8 @@ export const translations: Record<Locale, Dictionary> = {
       organizer: "Ұйымдастырушы",
       attending: "Қатысады",
       attendingShort: "қатысады",
+      going: "Сіз қатысасыз",
+      cancel: "Бас тарту",
       empty: "Әзірге жоспарланған іс-шара жоқ.",
       mapLabel: "Интерактивті карта · АҚШ",
     },
@@ -803,6 +809,8 @@ export const translations: Record<Locale, Dictionary> = {
       organizer: "Организатор",
       attending: "Идут",
       attendingShort: "идут",
+      going: "Вы идёте",
+      cancel: "Отменить",
       empty: "Пока нет запланированных событий.",
       mapLabel: "Интерактивная карта · США",
     },
