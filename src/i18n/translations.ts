@@ -137,9 +137,27 @@ export interface Dictionary {
     memberSince: string;
     method: string;
     signOut: string;
-    roadmap: string;
     loading: string;
     notConfigured: string;
+  };
+  profile: {
+    heading: string;
+    hint: string;
+    name: string;
+    university: string;
+    major: string;
+    degree: string;
+    selectDegree: string;
+    gradYear: string;
+    state: string;
+    city: string;
+    industry: string;
+    bio: string;
+    isAlumni: string;
+    save: string;
+    saving: string;
+    saved: string;
+    error: string;
   };
 }
 
@@ -310,9 +328,27 @@ export const translations: Record<Locale, Dictionary> = {
       memberSince: "Member since",
       method: "Sign-in method",
       signOut: "Sign out",
-      roadmap: "Profile editing, campaign creation, and event RSVPs are next on the roadmap.",
       loading: "Loading…",
       notConfigured: "Authentication is not configured yet.",
+    },
+    profile: {
+      heading: "Your profile",
+      hint: "Complete your profile to appear in the community directory.",
+      name: "Full name",
+      university: "University",
+      major: "Major",
+      degree: "Degree level",
+      selectDegree: "Select degree",
+      gradYear: "Graduation year",
+      state: "State",
+      city: "City",
+      industry: "Industry",
+      bio: "Short bio",
+      isAlumni: "I am an alumnus / alumna",
+      save: "Save profile",
+      saving: "Saving…",
+      saved: "Profile saved.",
+      error: "Could not save. Please try again.",
     },
   },
 
@@ -482,9 +518,27 @@ export const translations: Record<Locale, Dictionary> = {
       memberSince: "Тіркелген уақыты",
       method: "Кіру тәсілі",
       signOut: "Шығу",
-      roadmap: "Профильді өңдеу, науқан жасау және іс-шараға тіркелу — жоспардағы келесі қадамдар.",
       loading: "Жүктелуде…",
       notConfigured: "Аутентификация әзірге бапталмаған.",
+    },
+    profile: {
+      heading: "Сіздің профиль",
+      hint: "Қоғамдастық каталогында көріну үшін профиліңізді толтырыңыз.",
+      name: "Толық аты-жөні",
+      university: "Университет",
+      major: "Мамандық",
+      degree: "Дәреже деңгейі",
+      selectDegree: "Дәрежені таңдаңыз",
+      gradYear: "Бітіру жылы",
+      state: "Штат",
+      city: "Қала",
+      industry: "Сала",
+      bio: "Қысқаша өмірбаян",
+      isAlumni: "Мен түлекпін",
+      save: "Профильді сақтау",
+      saving: "Сақталуда…",
+      saved: "Профиль сақталды.",
+      error: "Сақтау мүмкін болмады. Қайта көріңіз.",
     },
   },
 
@@ -654,9 +708,27 @@ export const translations: Record<Locale, Dictionary> = {
       memberSince: "Участник с",
       method: "Способ входа",
       signOut: "Выйти",
-      roadmap: "Редактирование профиля, создание кампаний и регистрация на события — следующие шаги.",
       loading: "Загрузка…",
       notConfigured: "Аутентификация ещё не настроена.",
+    },
+    profile: {
+      heading: "Ваш профиль",
+      hint: "Заполните профиль, чтобы появиться в каталоге сообщества.",
+      name: "Полное имя",
+      university: "Университет",
+      major: "Специальность",
+      degree: "Уровень степени",
+      selectDegree: "Выберите степень",
+      gradYear: "Год выпуска",
+      state: "Штат",
+      city: "Город",
+      industry: "Отрасль",
+      bio: "Краткая биография",
+      isAlumni: "Я выпускник / выпускница",
+      save: "Сохранить профиль",
+      saving: "Сохранение…",
+      saved: "Профиль сохранён.",
+      error: "Не удалось сохранить. Попробуйте снова.",
     },
   },
 };

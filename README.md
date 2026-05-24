@@ -41,7 +41,8 @@ The data layer (`src/lib/queries.ts`) reads from Supabase when configured and fa
 back to mock data otherwise — so you can connect the database without touching the UI.
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. In the **SQL Editor**, run `supabase/schema.sql`, then `supabase/seed.sql`.
+2. In the **SQL Editor**, run `supabase/schema.sql`, then `supabase/seed.sql`, then
+   `supabase/profiles_auth.sql` (enables per-user editable profiles + RLS write policies).
 3. Copy `Project Settings → API → Project URL` and the `anon` key.
 4. Locally: copy `.env.example` to `.env.local` and fill in:
    ```
@@ -59,7 +60,9 @@ Auth uses **Supabase Auth** with cookie-based sessions (`@supabase/ssr`). The sa
 env vars above enable it — no extra config for email/password.
 
 - `/login` — email/password sign in & sign up, plus "Continue with Google".
-- `/account` — signed-in user's account page with sign out.
+- `/account` — signed-in user's profile editor (name, university, major, degree, etc.).
+  Saving writes to the `profiles` table; once `university` is filled the member appears
+  in the community directory.
 - `src/middleware.ts` refreshes the session on every request.
 - `/auth/callback` exchanges the OAuth / email-confirmation code for a session.
 
