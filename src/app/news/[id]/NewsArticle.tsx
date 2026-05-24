@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useApp } from "@/components/Providers";
 import Tr from "@/components/Tr";
 import { categoryLabel } from "../NewsClient";
@@ -14,6 +15,9 @@ export default function NewsArticle({ post }: { post: NewsPost }) {
     day: "numeric",
     year: "numeric",
   });
+
+  const gallery = post.images ?? [];
+  const [active, setActive] = useState(0);
 
   return (
     <article className="container-page py-12">
@@ -30,11 +34,54 @@ export default function NewsArticle({ post }: { post: NewsPost }) {
         <p className="mt-4 text-lg text-fg-muted"><Tr>{post.excerpt}</Tr></p>
       </div>
 
-      <div className="mt-6 h-56 max-w-3xl rounded-2xl bg-gradient-to-br from-accent/25 via-accent-steppe/20 to-accent-gold/20" />
+      {post.coverUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={post.coverUrl}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="mt-6 h-72 max-w-3xl w-full rounded-2xl object-cover"
+        />
+      ) : (
+        <div className="mt-6 h-56 max-w-3xl rounded-2xl bg-gradient-to-br from-accent/25 via-accent-steppe/20 to-accent-gold/20" />
+      )}
 
       <div className="mt-8 max-w-3xl whitespace-pre-line leading-relaxed text-fg-muted">
         <Tr>{post.body}</Tr>
       </div>
+
+      {gallery.length > 0 && (
+        <div className="mt-10 max-w-3xl">
+          <h2 className="text-lg font-semibold text-fg">{t.news.gallery}</h2>
+          <div className="mt-3 overflow-hidden rounded-2xl">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={gallery[active]}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="aspect-video w-full object-cover"
+            />
+          </div>
+          {gallery.length > 1 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {gallery.map((url, i) => (
+                <button
+                  key={url}
+                  onClick={() => setActive(i)}
+                  className={`overflow-hidden rounded-lg ring-2 transition ${
+                    i === active ? "ring-accent" : "ring-transparent hover:ring-line/20"
+                  }`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt="" loading="lazy" decoding="async" className="h-16 w-16 object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </article>
   );
 }

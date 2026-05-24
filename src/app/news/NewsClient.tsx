@@ -55,7 +55,12 @@ export default function NewsClient({ posts }: { posts: NewsPost[] }) {
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((p) => (
             <Link key={p.id} href={`/news/${p.id}`} className="card flex h-full flex-col overflow-hidden transition hover:border-line/30">
-              <div className="h-36 bg-gradient-to-br from-accent/25 via-accent-steppe/20 to-accent-gold/20" />
+              {p.coverUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={p.coverUrl} alt="" loading="lazy" decoding="async" className="h-36 w-full object-cover" />
+              ) : (
+                <div className="h-36 bg-gradient-to-br from-accent/25 via-accent-steppe/20 to-accent-gold/20" />
+              )}
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex items-center justify-between">
                   <span className="chip">{categoryLabel(t, p.category)}</span>

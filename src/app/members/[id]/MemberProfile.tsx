@@ -8,26 +8,34 @@ import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/Providers";
 import type { Member } from "@/lib/data";
 
-export default function MemberProfile({ m }: { m: Member }) {
+export default function MemberProfile({ m, preview = false }: { m: Member; preview?: boolean }) {
   const { t } = useApp();
   const [isOwn, setIsOwn] = useState(false);
 
   useEffect(() => {
+    if (preview) return;
     const supabase = createClient();
     if (!supabase || !m.userId) return;
     supabase.auth.getUser().then(({ data }) => setIsOwn(data.user?.id === m.userId));
-  }, [m.userId]);
+  }, [m.userId, preview]);
 
   return (
-    <div className="container-page py-12">
-      <Link href="/directory" className="text-sm text-accent hover:underline">
-        {t.member.back}
-      </Link>
+    <div className={preview ? "" : "container-page py-12"}>
+      {!preview && (
+        <Link href="/directory" className="text-sm text-accent hover:underline">
+          {t.member.back}
+        </Link>
+      )}
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-[1.7fr_1fr]">
+      <div className={`grid gap-8 lg:grid-cols-[1.7fr_1fr] ${preview ? "" : "mt-6"}`}>
         <div>
           <div className="card overflow-hidden">
-            <div className="h-40 bg-gradient-to-br from-accent/30 via-accent-steppe/20 to-accent-gold/20" />
+            {m.bannerUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={m.bannerUrl} alt="" loading="lazy" decoding="async" className="h-40 w-full object-cover" />
+            ) : (
+              <div className="h-40 bg-gradient-to-br from-accent/30 via-accent-steppe/20 to-accent-gold/20" />
+            )}
             <div className="p-6">
               <div className="-mt-14 flex items-end justify-between gap-4">
                 <div className="flex items-end gap-4">

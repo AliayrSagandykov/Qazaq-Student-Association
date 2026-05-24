@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient, isAuthConfigured } from "@/lib/supabase/client";
+import { uploadMedia } from "@/lib/upload";
 import { useApp } from "@/components/Providers";
 
 const CATEGORIES = ["News", "Story", "Press"] as const;
+const MAX_IMAGES = 10;
 
 export default function NewNewsPage() {
   const router = useRouter();
@@ -16,6 +18,10 @@ export default function NewNewsPage() {
   const [authorized, setAuthorized] = useState(false);
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [form, setForm] = useState({ title: "", excerpt: "", body: "", category: "News" });
+  const [userId, setUserId] = useState<string | null>(null);
+  const [coverUrl, setCoverUrl] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!supabase) {
@@ -28,6 +34,7 @@ export default function NewNewsPage() {
         router.replace("/login");
         return;
       }
+      setUserId(auth.user.id);
       const { data } = await supabase
         .from("profiles")
         .select("role")
@@ -37,6 +44,31 @@ export default function NewNewsPage() {
       setReady(true);
     })();
   }, [supabase, router]);
+
+  async function uploadCover(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !supabase || !userId) return;
+    setUploading(true);
+    const url = await uploadMedia(supabase, userId, file);
+    if (url) setCoverUrl(url);
+    setUploading(false);
+    e.target.value = "";
+  }
+
+  async function addImages(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length || !supabase || !userId) return;
+    setUploading(true);
+    const room = MAX_IMAGES - images.length;
+    const uploaded: string[] = [];
+    for (const file of files.slice(0, room)) {
+      const url = await uploadMedia(supabase, userId, file);
+      if (url) uploaded.push(url);
+    }
+    setImages((prev) => [...prev, ...uploaded].slice(0, MAX_IMAGES));
+    setUploading(false);
+    e.target.value = "";
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -52,6 +84,8 @@ export default function NewNewsPage() {
         body: form.body,
         category: form.category,
         published: true,
+        cover_url: coverUrl || null,
+        images,
       })
       .select("id")
       .single();
@@ -101,6 +135,50 @@ export default function NewNewsPage() {
           <span className="text-sm text-fg-muted">{t.newsNew.body}</span>
           <textarea required rows={8} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} className={inputClass} />
         </label>
+
+        <div className="mt-4">
+          <span className="text-sm text-fg-muted">{t.newsNew.cover}</span>
+          <p className="text-xs text-fg-muted/70">{t.newsNew.coverHint}</p>
+          <div className="mt-2 flex items-center gap-3">
+            {coverUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={coverUrl} alt="" loading="lazy" decoding="async" className="h-20 w-32 rounded-lg object-cover" />
+            ) : (
+              <div className="h-20 w-32 rounded-lg bg-gradient-to-br from-accent/25 via-accent-steppe/20 to-accent-gold/20" />
+            )}
+            <label className="inline-flex cursor-pointer items-center text-sm text-accent hover:underline">
+              {uploading ? t.newsNew.uploading : t.newsNew.cover}
+              <input type="file" accept="image/*" onChange={uploadCover} className="hidden" disabled={uploading} />
+            </label>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <span className="text-sm text-fg-muted">{t.newsNew.images}</span>
+          <p className="text-xs text-fg-muted/70">{t.newsNew.imagesHint}</p>
+          <div className="mt-2 flex flex-wrap gap-3">
+            {images.map((url) => (
+              <div key={url} className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt="" loading="lazy" decoding="async" className="h-20 w-20 rounded-lg object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setImages((prev) => prev.filter((u) => u !== url))}
+                  className="absolute -right-2 -top-2 grid h-5 w-5 place-items-center rounded-full bg-bg text-xs text-fg-muted ring-1 ring-line/20"
+                  aria-label="Remove"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            {images.length < MAX_IMAGES && (
+              <label className="grid h-20 w-20 cursor-pointer place-items-center rounded-lg border border-dashed border-line/20 text-xs text-fg-muted hover:border-accent/60">
+                {uploading ? "…" : `+ ${images.length}/${MAX_IMAGES}`}
+                <input type="file" accept="image/*" multiple onChange={addImages} className="hidden" disabled={uploading} />
+              </label>
+            )}
+          </div>
+        </div>
 
         <div className="mt-6 flex items-center gap-4">
           <button type="submit" disabled={status === "saving"} className="btn-primary disabled:opacity-60">

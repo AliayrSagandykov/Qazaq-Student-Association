@@ -9,10 +9,17 @@ import { useApp } from "@/components/Providers";
 import type { Campaign } from "@/lib/data";
 import DonatePanel from "./DonatePanel";
 
+function youtubeId(url: string): string | null {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+  return m ? m[1] : null;
+}
+
 export default function CampaignDetail({ c }: { c: Campaign }) {
   const { t } = useApp();
   const donated = useSearchParams().get("donated") === "1";
   const publicDonors = [...c.donors].sort((a, b) => b.amount - a.amount);
+  const images = c.images ?? [];
+  const videoId = c.videoUrl ? youtubeId(c.videoUrl) : null;
 
   return (
     <div className="container-page py-12">
@@ -44,8 +51,44 @@ export default function CampaignDetail({ c }: { c: Campaign }) {
 
           <section className="card mt-6 p-6">
             <h2 className="text-lg font-semibold text-fg">{t.campaign.story}</h2>
-            <p className="mt-3 leading-relaxed text-fg-muted"><Tr>{c.story}</Tr></p>
+            <p className="mt-3 whitespace-pre-line leading-relaxed text-fg-muted"><Tr>{c.story}</Tr></p>
           </section>
+
+          {videoId && (
+            <section className="card mt-6 p-6">
+              <h2 className="text-lg font-semibold text-fg">{t.campaign.video}</h2>
+              <div className="mt-3 aspect-video overflow-hidden rounded-xl">
+                <iframe
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  title={t.campaign.video}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="h-full w-full"
+                />
+              </div>
+            </section>
+          )}
+
+          {images.length > 0 && (
+            <section className="card mt-6 p-6">
+              <h2 className="text-lg font-semibold text-fg">{t.campaign.gallery}</h2>
+              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {images.map((url) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <a key={url} href={url} target="_blank" rel="noopener noreferrer" className="block">
+                    <img
+                      src={url}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="aspect-square w-full rounded-xl object-cover transition hover:opacity-90"
+                    />
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
 
           <section className="card mt-6 p-6">
             <h2 className="text-lg font-semibold text-fg">{t.campaign.goals}</h2>

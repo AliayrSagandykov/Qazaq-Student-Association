@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import Progress from "@/components/Progress";
 import Tr from "@/components/Tr";
+import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/Providers";
 import type { Campaign } from "@/lib/data";
 
@@ -16,6 +17,13 @@ export default function CrowdfundingClient({ campaigns }: { campaigns: Campaign[
   const ALL = t.crowdfunding.all;
   const [degree, setDegree] = useState(ALL);
   const [sort, setSort] = useState<SortKey>("urgency");
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+  }, []);
 
   const degrees = [ALL, ...Array.from(new Set(campaigns.map((c) => c.degree)))];
 
@@ -36,7 +44,7 @@ export default function CrowdfundingClient({ campaigns }: { campaigns: Campaign[
           <h1 className="text-3xl font-bold sm:text-4xl">{t.crowdfunding.title}</h1>
           <p className="mt-3 max-w-2xl text-fg-muted">{t.crowdfunding.sub}</p>
         </div>
-        <Link href="/crowdfunding/new" className="btn-primary">
+        <Link href={signedIn ? "/crowdfunding/new" : "/login"} className="btn-primary">
           {t.crowdfunding.start}
         </Link>
       </div>

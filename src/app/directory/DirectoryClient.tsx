@@ -88,18 +88,27 @@ export default function DirectoryClient({ members }: { members: Member[] }) {
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((m) => (
-          <div key={m.id} className="card flex flex-col p-6">
+          <div key={m.id} className="card flex flex-col overflow-hidden">
             <Link href={`/members/${m.id}`} className="group block">
-              <div className="flex items-start justify-between">
-                <Avatar initials={m.initials} src={m.avatarUrl} size="lg" />
-                {m.isAlumni && <span className="chip">{t.directory.alumni}</span>}
+              {m.bannerUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={m.bannerUrl} alt="" loading="lazy" decoding="async" className="h-24 w-full object-cover" />
+              ) : (
+                <div className="h-24 bg-gradient-to-br from-accent/25 via-accent-steppe/20 to-accent-gold/20" />
+              )}
+              <div className="px-6 pb-2">
+                <div className="-mt-8 flex items-end justify-between">
+                  <Avatar initials={m.initials} src={m.avatarUrl} size="lg" />
+                  {m.isAlumni && <span className="chip mb-1">{t.directory.alumni}</span>}
+                </div>
+                <h3 className="mt-3 font-semibold text-fg group-hover:text-accent">{m.name}</h3>
+                <p className="text-sm text-fg-muted">{m.major} · {m.degree}</p>
+                <p className="mt-1 text-xs text-fg-muted/70">{m.university}</p>
+                <p className="mt-3 text-sm text-fg-muted"><Tr>{m.bio}</Tr></p>
               </div>
-              <h3 className="mt-4 font-semibold text-fg group-hover:text-accent">{m.name}</h3>
-              <p className="text-sm text-fg-muted">{m.major} · {m.degree}</p>
-              <p className="mt-1 text-xs text-fg-muted/70">{m.university}</p>
-              <p className="mt-3 text-sm text-fg-muted"><Tr>{m.bio}</Tr></p>
             </Link>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="flex flex-1 flex-col px-6 pb-6">
+            <div className="mt-2 flex flex-wrap gap-2">
               <span className="chip">{m.industry}</span>
               <span className="chip">{m.city}, {m.state}</span>
               {m.gradYear > 0 && <span className="chip">{t.directory.classOf} {m.gradYear}</span>}
@@ -126,6 +135,7 @@ export default function DirectoryClient({ members }: { members: Member[] }) {
                 )}
               </div>
             )}
+            </div>
           </div>
         ))}
       </div>
