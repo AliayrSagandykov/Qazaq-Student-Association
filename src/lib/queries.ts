@@ -32,6 +32,10 @@ function mapMember(r: Row): Member {
     isAlumni: Boolean(r.is_alumni),
     bio: str(r.bio),
     initials: str(r.initials),
+    avatarUrl: r.avatar_url ? String(r.avatar_url) : undefined,
+    linkedin: r.linkedin ? String(r.linkedin) : undefined,
+    website: r.website ? String(r.website) : undefined,
+    publicEmail: r.public_email ? String(r.public_email) : undefined,
   };
 }
 
