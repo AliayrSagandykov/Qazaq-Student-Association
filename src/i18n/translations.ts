@@ -301,6 +301,14 @@ export interface Dictionary {
     backToEdit: string;
     previewNote: string;
   };
+  cropper: {
+    bannerTitle: string;
+    avatarTitle: string;
+    zoom: string;
+    save: string;
+    cancel: string;
+    saving: string;
+  };
 }
 
 export const translations: Record<Locale, Dictionary> = {
@@ -634,6 +642,14 @@ export const translations: Record<Locale, Dictionary> = {
       backToEdit: "Back to editing",
       previewNote: "This is how other members see your profile.",
     },
+    cropper: {
+      bannerTitle: "Adjust your banner",
+      avatarTitle: "Adjust your photo",
+      zoom: "Zoom",
+      save: "Save",
+      cancel: "Cancel",
+      saving: "Saving…",
+    },
   },
 
   kk: {
@@ -966,6 +982,14 @@ export const translations: Record<Locale, Dictionary> = {
       backToEdit: "Өңдеуге оралу",
       previewNote: "Профиліңізді басқа қатысушылар осылай көреді.",
     },
+    cropper: {
+      bannerTitle: "Баннерді реттеу",
+      avatarTitle: "Фотоны реттеу",
+      zoom: "Масштаб",
+      save: "Сақтау",
+      cancel: "Бас тарту",
+      saving: "Сақталуда…",
+    },
   },
 
   ru: {
@@ -1297,6 +1321,14 @@ export const translations: Record<Locale, Dictionary> = {
       preview: "Предпросмотр профиля",
       backToEdit: "Вернуться к редактированию",
       previewNote: "Так ваш профиль видят другие участники.",
+    },
+    cropper: {
+      bannerTitle: "Настройте баннер",
+      avatarTitle: "Настройте фото",
+      zoom: "Масштаб",
+      save: "Сохранить",
+      cancel: "Отмена",
+      saving: "Сохранение…",
     },
   },
 };

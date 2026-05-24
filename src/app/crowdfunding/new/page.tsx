@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient, isAuthConfigured } from "@/lib/supabase/client";
-import { uploadMedia } from "@/lib/upload";
+import { uploadMedia, downscaleImage } from "@/lib/upload";
 import { useApp } from "@/components/Providers";
 
 const DEGREES = ["Bachelor's", "Master's", "PhD"];
@@ -101,7 +101,7 @@ export default function NewCampaignPage() {
     const room = MAX_IMAGES - images.length;
     const uploaded: string[] = [];
     for (const file of files.slice(0, room)) {
-      const url = await uploadMedia(supabase, user.id, file);
+      const url = await uploadMedia(supabase, user.id, await downscaleImage(file));
       if (url) uploaded.push(url);
     }
     setImages((prev) => [...prev, ...uploaded].slice(0, MAX_IMAGES));

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient, isAuthConfigured } from "@/lib/supabase/client";
-import { uploadMedia } from "@/lib/upload";
+import { uploadMedia, downscaleImage } from "@/lib/upload";
 import { useApp } from "@/components/Providers";
 
 const CATEGORIES = ["News", "Story", "Press"] as const;
@@ -49,7 +49,7 @@ export default function NewNewsPage() {
     const file = e.target.files?.[0];
     if (!file || !supabase || !userId) return;
     setUploading(true);
-    const url = await uploadMedia(supabase, userId, file);
+    const url = await uploadMedia(supabase, userId, await downscaleImage(file));
     if (url) setCoverUrl(url);
     setUploading(false);
     e.target.value = "";
@@ -62,7 +62,7 @@ export default function NewNewsPage() {
     const room = MAX_IMAGES - images.length;
     const uploaded: string[] = [];
     for (const file of files.slice(0, room)) {
-      const url = await uploadMedia(supabase, userId, file);
+      const url = await uploadMedia(supabase, userId, await downscaleImage(file));
       if (url) uploaded.push(url);
     }
     setImages((prev) => [...prev, ...uploaded].slice(0, MAX_IMAGES));

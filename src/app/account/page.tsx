@@ -7,6 +7,7 @@ import { createClient, isAuthConfigured } from "@/lib/supabase/client";
 import { uploadMedia } from "@/lib/upload";
 import { useApp } from "@/components/Providers";
 import Avatar from "@/components/Avatar";
+import ImageCropper from "@/components/ImageCropper";
 import MemberProfile from "@/app/members/[id]/MemberProfile";
 import type { Member, DegreeLevel } from "@/lib/data";
 
@@ -67,9 +68,9 @@ export default function AccountPage() {
   const [ready, setReady] = useState(false);
   const [form, setForm] = useState<ProfileForm>(EMPTY);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const [uploading, setUploading] = useState(false);
-  const [uploadingBanner, setUploadingBanner] = useState(false);
   const [previewing, setPreviewing] = useState(false);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [cropKind, setCropKind] = useState<"avatar" | "banner" | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -151,33 +152,27 @@ export default function AccountPage() {
     setStatus(error ? "error" : "saved");
   }
 
-  async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file || !supabase || !user) return;
-    setUploading(true);
-    const ext = file.name.split(".").pop() || "jpg";
-    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
-    const { error } = await supabase.storage
-      .from("avatars")
-      .upload(path, file, { upsert: true });
-    if (!error) {
-      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      setForm((f) => ({ ...f, avatar_url: data.publicUrl }));
-      setStatus("idle");
-    }
-    setUploading(false);
+  function pickFile(kind: "avatar" | "banner") {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        setCropFile(file);
+        setCropKind(kind);
+      }
+      e.target.value = "";
+    };
   }
 
-  async function uploadBanner(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file || !supabase || !user) return;
-    setUploadingBanner(true);
+  async function handleCropComplete(blob: Blob) {
+    if (!supabase || !user || !cropKind) return;
+    const file = new File([blob], `${cropKind}.jpg`, { type: "image/jpeg" });
     const url = await uploadMedia(supabase, user.id, file);
     if (url) {
-      setForm((f) => ({ ...f, banner_url: url }));
+      setForm((f) => (cropKind === "avatar" ? { ...f, avatar_url: url } : { ...f, banner_url: url }));
       setStatus("idle");
     }
-    setUploadingBanner(false);
+    setCropFile(null);
+    setCropKind(null);
   }
 
   const previewMember: Member = {
@@ -270,8 +265,8 @@ export default function AccountPage() {
           )}
           <div className="flex justify-end bg-surface/60 px-4 py-2">
             <label className="inline-flex cursor-pointer items-center text-sm text-accent hover:underline">
-              {uploadingBanner ? t.profile.uploading : t.profile.uploadBanner}
-              <input type="file" accept="image/*" onChange={uploadBanner} className="hidden" disabled={uploadingBanner} />
+              {t.profile.uploadBanner}
+              <input type="file" accept="image/*" onChange={pickFile("banner")} className="hidden" />
             </label>
           </div>
         </div>
@@ -282,12 +277,32 @@ export default function AccountPage() {
             <p className="font-semibold text-fg">{form.name || user.email}</p>
             <p className="text-sm text-fg-muted">{user.email}</p>
             <label className="mt-2 inline-flex cursor-pointer items-center text-sm text-accent hover:underline">
-              {uploading ? t.profile.uploading : t.profile.uploadPhoto}
-              <input type="file" accept="image/*" onChange={uploadPhoto} className="hidden" disabled={uploading} />
+              {t.profile.uploadPhoto}
+              <input type="file" accept="image/*" onChange={pickFile("avatar")} className="hidden" />
             </label>
           </div>
         </div>
       </div>
+
+      {cropFile && cropKind && (
+        <ImageCropper
+          file={cropFile}
+          aspect={cropKind === "avatar" ? 1 : 3}
+          outputWidth={cropKind === "avatar" ? 400 : 1200}
+          title={cropKind === "avatar" ? t.cropper.avatarTitle : t.cropper.bannerTitle}
+          labels={{
+            cancel: t.cropper.cancel,
+            save: t.cropper.save,
+            zoom: t.cropper.zoom,
+            saving: t.cropper.saving,
+          }}
+          onCancel={() => {
+            setCropFile(null);
+            setCropKind(null);
+          }}
+          onComplete={handleCropComplete}
+        />
+      )}
 
       <form onSubmit={save} className={`card mt-8 max-w-2xl p-8 ${previewing ? "hidden" : ""}`}>
         <h2 className="text-lg font-semibold">{t.profile.heading}</h2>
