@@ -18,6 +18,10 @@ interface ProfileForm {
   industry: string;
   bio: string;
   is_alumni: boolean;
+  avatar_url: string;
+  linkedin: string;
+  website: string;
+  public_email: string;
 }
 
 const EMPTY: ProfileForm = {
@@ -31,6 +35,10 @@ const EMPTY: ProfileForm = {
   industry: "",
   bio: "",
   is_alumni: false,
+  avatar_url: "",
+  linkedin: "",
+  website: "",
+  public_email: "",
 };
 
 const DEGREES = ["Bachelor's", "Master's", "PhD"];
@@ -52,6 +60,7 @@ export default function AccountPage() {
   const [ready, setReady] = useState(false);
   const [form, setForm] = useState<ProfileForm>(EMPTY);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [uploading, setUploading] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -88,6 +97,10 @@ export default function AccountPage() {
           industry: profile.industry ?? "",
           bio: profile.bio ?? "",
           is_alumni: Boolean(profile.is_alumni),
+          avatar_url: profile.avatar_url ?? "",
+          linkedin: profile.linkedin ?? "",
+          website: profile.website ?? "",
+          public_email: profile.public_email ?? "",
         });
       } else {
         setForm({ ...EMPTY, name: fallbackName });
@@ -115,10 +128,31 @@ export default function AccountPage() {
         bio: form.bio,
         is_alumni: form.is_alumni,
         initials: initialsOf(form.name),
+        avatar_url: form.avatar_url || null,
+        linkedin: form.linkedin || null,
+        website: form.website || null,
+        public_email: form.public_email || null,
       },
       { onConflict: "user_id" },
     );
     setStatus(error ? "error" : "saved");
+  }
+
+  async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !supabase || !user) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true });
+    if (!error) {
+      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+      setForm((f) => ({ ...f, avatar_url: data.publicUrl }));
+      setStatus("idle");
+    }
+    setUploading(false);
   }
 
   async function signOut() {
@@ -166,10 +200,14 @@ export default function AccountPage() {
       </div>
 
       <div className="mt-8 flex items-center gap-4">
-        <Avatar initials={initialsOf(form.name) || "?"} size="lg" />
+        <Avatar initials={initialsOf(form.name) || "?"} src={form.avatar_url || undefined} size="lg" />
         <div>
           <p className="font-semibold text-fg">{form.name || user.email}</p>
           <p className="text-sm text-fg-muted">{user.email}</p>
+          <label className="mt-2 inline-flex cursor-pointer items-center text-sm text-accent hover:underline">
+            {uploading ? t.profile.uploading : t.profile.uploadPhoto}
+            <input type="file" accept="image/*" onChange={uploadPhoto} className="hidden" disabled={uploading} />
+          </label>
         </div>
       </div>
 
@@ -226,6 +264,14 @@ export default function AccountPage() {
           />
           {t.profile.isAlumni}
         </label>
+
+        <h3 className="mt-8 text-sm font-semibold text-fg">{t.profile.contactHeading}</h3>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          {field("public_email", t.profile.publicEmail, "email")}
+          {field("linkedin", t.profile.linkedin, "url")}
+          <div className="sm:col-span-2">{field("website", t.profile.website, "url")}</div>
+        </div>
+        <p className="mt-2 text-xs text-fg-muted/70">{t.profile.publicEmailHint}</p>
 
         <div className="mt-6 flex items-center gap-4">
           <button type="submit" disabled={status === "saving"} className="btn-primary disabled:opacity-60">

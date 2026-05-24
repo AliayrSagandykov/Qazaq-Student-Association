@@ -41,8 +41,9 @@ The data layer (`src/lib/queries.ts`) reads from Supabase when configured and fa
 back to mock data otherwise — so you can connect the database without touching the UI.
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. In the **SQL Editor**, run `supabase/schema.sql`, then `supabase/seed.sql`, then
-   `supabase/profiles_auth.sql` (enables per-user editable profiles + RLS write policies).
+2. In the **SQL Editor**, run, in order: `supabase/schema.sql`, `supabase/seed.sql`,
+   `supabase/profiles_auth.sql` (per-user editable profiles + RLS), and
+   `supabase/profiles_photo_contact.sql` (avatar storage bucket + contact fields).
 3. Copy `Project Settings → API → Project URL` and the `anon` key.
 4. Locally: copy `.env.example` to `.env.local` and fill in:
    ```

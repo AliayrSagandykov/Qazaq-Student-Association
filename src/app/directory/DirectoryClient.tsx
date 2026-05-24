@@ -88,7 +88,7 @@ export default function DirectoryClient({ members }: { members: Member[] }) {
         {filtered.map((m) => (
           <div key={m.id} className="card p-6">
             <div className="flex items-start justify-between">
-              <Avatar initials={m.initials} size="lg" />
+              <Avatar initials={m.initials} src={m.avatarUrl} size="lg" />
               {m.isAlumni && <span className="chip">{t.directory.alumni}</span>}
             </div>
             <h3 className="mt-4 font-semibold text-fg">{m.name}</h3>
@@ -98,8 +98,27 @@ export default function DirectoryClient({ members }: { members: Member[] }) {
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="chip">{m.industry}</span>
               <span className="chip">{m.city}, {m.state}</span>
-              <span className="chip">{t.directory.classOf} {m.gradYear}</span>
+              {m.gradYear > 0 && <span className="chip">{t.directory.classOf} {m.gradYear}</span>}
             </div>
+            {(m.publicEmail || m.linkedin || m.website) && (
+              <div className="mt-4 flex flex-wrap gap-2 border-t border-line/10 pt-4">
+                {m.publicEmail && (
+                  <a href={`mailto:${m.publicEmail}`} className="btn-ghost !px-4 !py-1.5 !text-xs">
+                    {t.directory.email}
+                  </a>
+                )}
+                {m.linkedin && (
+                  <a href={m.linkedin} target="_blank" rel="noopener noreferrer" className="btn-ghost !px-4 !py-1.5 !text-xs">
+                    {t.directory.linkedin}
+                  </a>
+                )}
+                {m.website && (
+                  <a href={m.website} target="_blank" rel="noopener noreferrer" className="btn-ghost !px-4 !py-1.5 !text-xs">
+                    {t.directory.website}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>

@@ -16,6 +16,10 @@ export interface Member {
   isAlumni: boolean;
   bio: string;
   initials: string;
+  avatarUrl?: string;
+  linkedin?: string;
+  website?: string;
+  publicEmail?: string;
 }
 
 export interface PlatformEvent {

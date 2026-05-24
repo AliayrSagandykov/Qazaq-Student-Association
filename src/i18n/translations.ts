@@ -72,6 +72,9 @@ export interface Dictionary {
     resultsOne: string;
     resultsMany: string;
     empty: string;
+    email: string;
+    linkedin: string;
+    website: string;
   };
   events: {
     title: string;
@@ -158,6 +161,14 @@ export interface Dictionary {
     saving: string;
     saved: string;
     error: string;
+    photo: string;
+    uploadPhoto: string;
+    uploading: string;
+    contactHeading: string;
+    linkedin: string;
+    website: string;
+    publicEmail: string;
+    publicEmailHint: string;
   };
 }
 
@@ -263,6 +274,9 @@ export const translations: Record<Locale, Dictionary> = {
       resultsOne: "member",
       resultsMany: "members",
       empty: "No members match your filters yet.",
+      email: "Email",
+      linkedin: "LinkedIn",
+      website: "Website",
     },
     events: {
       title: "Events",
@@ -349,6 +363,14 @@ export const translations: Record<Locale, Dictionary> = {
       saving: "Saving…",
       saved: "Profile saved.",
       error: "Could not save. Please try again.",
+      photo: "Profile photo",
+      uploadPhoto: "Upload photo",
+      uploading: "Uploading…",
+      contactHeading: "Contact & links",
+      linkedin: "LinkedIn URL",
+      website: "Website",
+      publicEmail: "Public email",
+      publicEmailHint: "Shown on your directory card so members can reach you.",
     },
   },
 
@@ -453,6 +475,9 @@ export const translations: Record<Locale, Dictionary> = {
       resultsOne: "қатысушы",
       resultsMany: "қатысушы",
       empty: "Сүзгіге сай қатысушы табылмады.",
+      email: "Эл. пошта",
+      linkedin: "LinkedIn",
+      website: "Сайт",
     },
     events: {
       title: "Іс-шаралар",
@@ -539,6 +564,14 @@ export const translations: Record<Locale, Dictionary> = {
       saving: "Сақталуда…",
       saved: "Профиль сақталды.",
       error: "Сақтау мүмкін болмады. Қайта көріңіз.",
+      photo: "Профиль фотосы",
+      uploadPhoto: "Фото жүктеу",
+      uploading: "Жүктелуде…",
+      contactHeading: "Байланыс және сілтемелер",
+      linkedin: "LinkedIn сілтемесі",
+      website: "Сайт",
+      publicEmail: "Ашық эл. пошта",
+      publicEmailHint: "Қатысушылар хабарласа алуы үшін каталог картаңызда көрсетіледі.",
     },
   },
 
@@ -643,6 +676,9 @@ export const translations: Record<Locale, Dictionary> = {
       resultsOne: "участник",
       resultsMany: "участников",
       empty: "Нет участников по вашим фильтрам.",
+      email: "Эл. почта",
+      linkedin: "LinkedIn",
+      website: "Сайт",
     },
     events: {
       title: "События",
@@ -729,6 +765,14 @@ export const translations: Record<Locale, Dictionary> = {
       saving: "Сохранение…",
       saved: "Профиль сохранён.",
       error: "Не удалось сохранить. Попробуйте снова.",
+      photo: "Фото профиля",
+      uploadPhoto: "Загрузить фото",
+      uploading: "Загрузка…",
+      contactHeading: "Контакты и ссылки",
+      linkedin: "Ссылка LinkedIn",
+      website: "Сайт",
+      publicEmail: "Публичная почта",
+      publicEmailHint: "Показывается на карточке в каталоге, чтобы с вами могли связаться.",
     },
   },
 };
