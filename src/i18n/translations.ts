@@ -102,6 +102,7 @@ export interface Dictionary {
     email: string;
     linkedin: string;
     website: string;
+    viewProfile: string;
   };
   events: {
     title: string;
@@ -121,6 +122,25 @@ export interface Dictionary {
     create: string;
     attendeesHeading: string;
     attendeesEmpty: string;
+    viewDetails: string;
+    loginToRsvp: string;
+    unregistered: string;
+    showAll: string;
+    showLess: string;
+    location: string;
+    about: string;
+    back: string;
+  };
+  member: {
+    back: string;
+    edit: string;
+    about: string;
+    aboutEmpty: string;
+    contact: string;
+    details: string;
+    notFound: string;
+    classOf: string;
+    alumni: string;
   };
   eventNew: {
     title: string;
@@ -244,6 +264,9 @@ export interface Dictionary {
     city: string;
     industry: string;
     bio: string;
+    bioHint: string;
+    about: string;
+    aboutHint: string;
     isAlumni: string;
     save: string;
     saving: string;
@@ -392,6 +415,7 @@ export const translations: Record<Locale, Dictionary> = {
       email: "Email",
       linkedin: "LinkedIn",
       website: "Website",
+      viewProfile: "View profile →",
     },
     events: {
       title: "Events",
@@ -411,6 +435,25 @@ export const translations: Record<Locale, Dictionary> = {
       create: "Create event",
       attendeesHeading: "Who's coming",
       attendeesEmpty: "No one has RSVP'd yet.",
+      viewDetails: "View details →",
+      loginToRsvp: "Sign in to RSVP to this event.",
+      unregistered: "Unregistered member",
+      showAll: "Show all",
+      showLess: "Show less",
+      location: "Location",
+      about: "About this event",
+      back: "← Back to events",
+    },
+    member: {
+      back: "← Back to directory",
+      edit: "Edit profile",
+      about: "About",
+      aboutEmpty: "This member hasn't written an introduction yet.",
+      contact: "Contact & links",
+      details: "Details",
+      notFound: "Member not found.",
+      classOf: "Class of",
+      alumni: "Alumni",
     },
     eventNew: {
       title: "Create an event",
@@ -534,6 +577,9 @@ export const translations: Record<Locale, Dictionary> = {
       city: "City",
       industry: "Industry",
       bio: "Short bio",
+      bioHint: "One line shown on your directory card.",
+      about: "About you",
+      aboutHint: "A longer introduction shown on your full profile page.",
       isAlumni: "I am an alumnus / alumna",
       save: "Save profile",
       saving: "Saving…",
@@ -681,6 +727,7 @@ export const translations: Record<Locale, Dictionary> = {
       email: "Эл. пошта",
       linkedin: "LinkedIn",
       website: "Сайт",
+      viewProfile: "Профильді ашу →",
     },
     events: {
       title: "Іс-шаралар",
@@ -700,6 +747,25 @@ export const translations: Record<Locale, Dictionary> = {
       create: "Іс-шара құру",
       attendeesHeading: "Кім келеді",
       attendeesEmpty: "Әзірге ешкім тіркелмеген.",
+      viewDetails: "Толығырақ →",
+      loginToRsvp: "Тіркелу үшін жүйеге кіріңіз.",
+      unregistered: "Тіркелмеген қатысушы",
+      showAll: "Барлығын көрсету",
+      showLess: "Жасыру",
+      location: "Орналасуы",
+      about: "Іс-шара туралы",
+      back: "← Іс-шараларға оралу",
+    },
+    member: {
+      back: "← Каталогқа оралу",
+      edit: "Профильді өзгерту",
+      about: "Өзі туралы",
+      aboutEmpty: "Бұл қатысушы әзірге өзі туралы жазбаған.",
+      contact: "Байланыс және сілтемелер",
+      details: "Мәліметтер",
+      notFound: "Қатысушы табылмады.",
+      classOf: "Бітіру жылы",
+      alumni: "Түлек",
     },
     eventNew: {
       title: "Іс-шара құру",
@@ -823,6 +889,9 @@ export const translations: Record<Locale, Dictionary> = {
       city: "Қала",
       industry: "Сала",
       bio: "Қысқаша өмірбаян",
+      bioHint: "Каталог картаңызда көрсетілетін бір жол.",
+      about: "Өзіңіз туралы",
+      aboutHint: "Толық профиль бетіңізде көрсетілетін кеңірек таныстырылым.",
       isAlumni: "Мен түлекпін",
       save: "Профильді сақтау",
       saving: "Сақталуда…",
@@ -970,6 +1039,7 @@ export const translations: Record<Locale, Dictionary> = {
       email: "Эл. почта",
       linkedin: "LinkedIn",
       website: "Сайт",
+      viewProfile: "Открыть профиль →",
     },
     events: {
       title: "События",
@@ -989,6 +1059,25 @@ export const translations: Record<Locale, Dictionary> = {
       create: "Создать событие",
       attendeesHeading: "Кто придёт",
       attendeesEmpty: "Пока никто не записался.",
+      viewDetails: "Подробнее →",
+      loginToRsvp: "Войдите, чтобы зарегистрироваться на событие.",
+      unregistered: "Незарегистрированный участник",
+      showAll: "Показать всех",
+      showLess: "Свернуть",
+      location: "Место",
+      about: "О событии",
+      back: "← Назад к событиям",
+    },
+    member: {
+      back: "← Назад в каталог",
+      edit: "Редактировать профиль",
+      about: "О себе",
+      aboutEmpty: "Участник пока не добавил описание.",
+      contact: "Контакты и ссылки",
+      details: "Детали",
+      notFound: "Участник не найден.",
+      classOf: "Выпуск",
+      alumni: "Выпускник",
     },
     eventNew: {
       title: "Создать событие",
@@ -1112,6 +1201,9 @@ export const translations: Record<Locale, Dictionary> = {
       city: "Город",
       industry: "Отрасль",
       bio: "Краткая биография",
+      bioHint: "Одна строка для карточки в каталоге.",
+      about: "О себе",
+      aboutHint: "Более подробное описание для полной страницы профиля.",
       isAlumni: "Я выпускник / выпускница",
       save: "Сохранить профиль",
       saving: "Сохранение…",

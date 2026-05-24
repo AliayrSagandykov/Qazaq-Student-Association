@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/Providers";
 import Tr from "@/components/Tr";
@@ -16,7 +15,6 @@ const EventsMap = dynamic(() => import("@/components/EventsMap"), {
 
 export default function EventsClient({ events }: { events: PlatformEvent[] }) {
   const { t, locale } = useApp();
-  const router = useRouter();
   const supabase = createClient();
   const localeTag = locale === "kk" ? "kk-KZ" : locale === "ru" ? "ru-RU" : "en-US";
   const formatDateTime = (iso: string) =>
@@ -39,6 +37,7 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
   const [attendeesByEvent, setAttendeesByEvent] = useState<Record<string, string[]>>({});
   const [namesById, setNamesById] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
+  const [needLoginFor, setNeedLoginFor] = useState<string | null>(null);
 
   useEffect(() => {
     if (!supabase || events.length === 0) return;
@@ -81,7 +80,7 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
   async function toggleRsvp(eventId: string) {
     if (!supabase) return;
     if (!userId) {
-      router.push("/login");
+      setNeedLoginFor(eventId);
       return;
     }
     setBusy(eventId);
@@ -116,7 +115,7 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
 
   const isOrganizer = selected && userId && selected.ownerId === userId;
   const attendeeNames = selected
-    ? (attendeesByEvent[selected.id] ?? []).map((u) => namesById[u] ?? "—")
+    ? (attendeesByEvent[selected.id] ?? []).map((u) => namesById[u] ?? t.events.unregistered)
     : [];
 
   return (
@@ -184,6 +183,20 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
                 >
                   {mine.has(selected.id) ? t.events.cancel : t.events.rsvp}
                 </button>
+                {needLoginFor === selected.id && (
+                  <p className="mt-3 text-center text-sm text-fg-muted">
+                    {t.events.loginToRsvp}{" "}
+                    <Link href="/login" className="text-accent hover:underline">
+                      {t.nav.signIn}
+                    </Link>
+                  </p>
+                )}
+                <Link
+                  href={`/events/${selected.id}`}
+                  className="mt-3 block text-center text-sm text-accent hover:underline"
+                >
+                  {t.events.viewDetails}
+                </Link>
 
                 {isOrganizer && (
                   <div className="mt-6 border-t border-line/10 pt-4">
@@ -204,13 +217,15 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
               {sorted.map((e) => (
-                <div key={e.id} className="card p-6">
-                  <div className="flex items-center justify-between">
-                    <span className="chip">{e.category}</span>
-                    <span className="text-sm text-fg-muted">{formatDateTime(e.date)}</span>
-                  </div>
-                  <h3 className="mt-3 text-lg font-semibold text-fg"><Tr>{e.title}</Tr></h3>
-                  <p className="mt-2 text-sm text-fg-muted"><Tr>{e.description}</Tr></p>
+                <div key={e.id} className="card flex flex-col p-6">
+                  <Link href={`/events/${e.id}`} className="group block">
+                    <div className="flex items-center justify-between">
+                      <span className="chip">{e.category}</span>
+                      <span className="text-sm text-fg-muted">{formatDateTime(e.date)}</span>
+                    </div>
+                    <h3 className="mt-3 text-lg font-semibold text-fg group-hover:text-accent"><Tr>{e.title}</Tr></h3>
+                    <p className="mt-2 text-sm text-fg-muted"><Tr>{e.description}</Tr></p>
+                  </Link>
                   <p className="mt-3 text-xs text-fg-muted/70">
                     {t.events.organizer}: <span className="text-fg-muted">{e.organizer}</span>
                   </p>
@@ -224,6 +239,14 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
                   >
                     {mine.has(e.id) ? t.events.going : t.events.rsvp}
                   </button>
+                  {needLoginFor === e.id && (
+                    <p className="mt-3 text-center text-sm text-fg-muted">
+                      {t.events.loginToRsvp}{" "}
+                      <Link href="/login" className="text-accent hover:underline">
+                        {t.nav.signIn}
+                      </Link>
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Avatar from "@/components/Avatar";
 import Progress from "@/components/Progress";
 import Tr from "@/components/Tr";
+import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/Providers";
 import type { Member, PlatformEvent, Campaign } from "@/lib/data";
 
@@ -30,6 +32,18 @@ export default function LandingClient({
   const upcoming = [...events].sort((a, b) => +new Date(a.date) - +new Date(b.date)).slice(0, 3);
   const topCampaigns = campaigns.slice(0, 3);
 
+  const [signedIn, setSignedIn] = useState(false);
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
+      setSignedIn(Boolean(session?.user)),
+    );
+    return () => sub.subscription.unsubscribe();
+  }, []);
+  const joinHref = signedIn ? "/account" : "/login";
+
   return (
     <div className="overflow-hidden">
       {/* Hero */}
@@ -51,7 +65,7 @@ export default function LandingClient({
         </Reveal>
         <Reveal delay={0.15}>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/login" className="btn-primary">
+            <Link href={joinHref} className="btn-primary">
               {t.hero.ctaPrimary}
             </Link>
             <Link href="/events" className="btn-ghost">
@@ -124,13 +138,13 @@ export default function LandingClient({
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map((m, i) => (
             <Reveal key={m.id} delay={i * 0.05}>
-              <div className="card h-full p-6">
-                <Avatar initials={m.initials} size="lg" />
+              <Link href={`/members/${m.id}`} className="card block h-full p-6 transition hover:border-line/30">
+                <Avatar initials={m.initials} src={m.avatarUrl} size="lg" />
                 <h3 className="mt-4 font-semibold text-fg">{m.name}</h3>
                 <p className="text-sm text-fg-muted">{m.major}</p>
                 <p className="mt-1 text-xs text-fg-muted/70">{m.university}</p>
                 <p className="mt-3 text-sm text-fg-muted"><Tr>{m.bio}</Tr></p>
-              </div>
+              </Link>
             </Reveal>
           ))}
         </div>
@@ -255,7 +269,7 @@ export default function LandingClient({
             <h2 className="text-3xl font-bold sm:text-4xl">{t.cta.heading}</h2>
             <p className="mx-auto mt-4 max-w-xl text-fg-muted">{t.cta.body}</p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/login" className="btn-primary">
+              <Link href={joinHref} className="btn-primary">
                 {t.cta.primary}
               </Link>
               <Link href="/crowdfunding/new" className="btn-ghost">
