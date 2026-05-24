@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import NewsClient from "./NewsClient";
 import { getNewsPosts } from "@/lib/queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: "News & Media",

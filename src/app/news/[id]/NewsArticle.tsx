@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useApp } from "@/components/Providers";
+import Tr from "@/components/Tr";
 import { categoryLabel } from "../NewsClient";
 import type { NewsPost } from "@/lib/data";
 
@@ -25,14 +26,14 @@ export default function NewsArticle({ post }: { post: NewsPost }) {
           <span className="chip">{categoryLabel(t, post.category)}</span>
           <span className="text-sm text-fg-muted/70">{date}</span>
         </div>
-        <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-4xl">{post.title}</h1>
-        <p className="mt-4 text-lg text-fg-muted">{post.excerpt}</p>
+        <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-4xl"><Tr>{post.title}</Tr></h1>
+        <p className="mt-4 text-lg text-fg-muted"><Tr>{post.excerpt}</Tr></p>
       </div>
 
       <div className="mt-6 h-56 max-w-3xl rounded-2xl bg-gradient-to-br from-accent/25 via-accent-steppe/20 to-accent-gold/20" />
 
       <div className="mt-8 max-w-3xl whitespace-pre-line leading-relaxed text-fg-muted">
-        {post.body}
+        <Tr>{post.body}</Tr>
       </div>
     </article>
   );

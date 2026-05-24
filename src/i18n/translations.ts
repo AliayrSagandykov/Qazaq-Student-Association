@@ -23,6 +23,7 @@ export interface Dictionary {
     events: string;
     crowdfunding: string;
     news: string;
+    home: string;
     signIn: string;
     join: string;
     account: string;
@@ -266,6 +267,7 @@ export const translations: Record<Locale, Dictionary> = {
       events: "Events",
       crowdfunding: "Crowdfunding",
       news: "News",
+      home: "Home",
       signIn: "Sign in",
       join: "Join",
       account: "Account",
@@ -554,6 +556,7 @@ export const translations: Record<Locale, Dictionary> = {
       events: "Іс-шаралар",
       crowdfunding: "Қаражат жинау",
       news: "Жаңалықтар",
+      home: "Басты бет",
       signIn: "Кіру",
       join: "Қосылу",
       account: "Профиль",
@@ -842,6 +845,7 @@ export const translations: Record<Locale, Dictionary> = {
       events: "События",
       crowdfunding: "Сбор средств",
       news: "Новости",
+      home: "Главная",
       signIn: "Войти",
       join: "Вступить",
       account: "Профиль",

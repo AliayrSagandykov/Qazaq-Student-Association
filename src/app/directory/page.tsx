@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import DirectoryClient from "./DirectoryClient";
 import { getMembers } from "@/lib/queries";
 
-// Render on each request so a newly completed profile shows up immediately.
-export const dynamic = "force-dynamic";
+// Cached for fast loads, refreshed in the background every 30s.
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: "Community Directory",

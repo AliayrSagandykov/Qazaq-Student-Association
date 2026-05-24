@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/Providers";
+import Tr from "@/components/Tr";
 import type { Dictionary } from "@/i18n/translations";
 import type { NewsPost } from "@/lib/data";
 
@@ -60,8 +61,8 @@ export default function NewsClient({ posts }: { posts: NewsPost[] }) {
                   <span className="chip">{categoryLabel(t, p.category)}</span>
                   <span className="text-xs text-fg-muted/70">{fmt(p.date)}</span>
                 </div>
-                <h2 className="mt-3 font-semibold text-fg">{p.title}</h2>
-                <p className="mt-2 flex-1 text-sm text-fg-muted">{p.excerpt}</p>
+                <h2 className="mt-3 font-semibold text-fg"><Tr>{p.title}</Tr></h2>
+                <p className="mt-2 flex-1 text-sm text-fg-muted"><Tr>{p.excerpt}</Tr></p>
                 <span className="mt-4 text-sm text-accent">{t.news.readMore}</span>
               </div>
             </Link>

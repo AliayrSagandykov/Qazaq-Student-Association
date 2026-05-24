@@ -40,6 +40,7 @@ export default function Navbar() {
   }, [supabase]);
 
   const links = [
+    { href: "/", label: t.nav.home },
     { href: "/directory", label: t.nav.directory },
     { href: "/events", label: t.nav.events },
     { href: "/crowdfunding", label: t.nav.crowdfunding },

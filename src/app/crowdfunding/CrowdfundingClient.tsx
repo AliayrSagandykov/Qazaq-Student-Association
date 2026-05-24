@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import Progress from "@/components/Progress";
+import Tr from "@/components/Tr";
 import { useApp } from "@/components/Providers";
 import type { Campaign } from "@/lib/data";
 
@@ -72,7 +73,7 @@ export default function CrowdfundingClient({ campaigns }: { campaigns: Campaign[
                 </span>
               )}
             </div>
-            <p className="mt-4 flex-1 text-sm text-fg-muted">{c.shortBio}</p>
+            <p className="mt-4 flex-1 text-sm text-fg-muted"><Tr>{c.shortBio}</Tr></p>
             <div className="mt-3 flex flex-wrap gap-2">
               <span className="chip">{c.major}</span>
               <span className="chip">{c.degree}</span>

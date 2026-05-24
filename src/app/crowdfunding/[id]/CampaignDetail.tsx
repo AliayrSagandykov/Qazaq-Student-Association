@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Avatar from "@/components/Avatar";
 import Progress, { formatUSD } from "@/components/Progress";
+import Tr from "@/components/Tr";
 import { useApp } from "@/components/Providers";
 import type { Campaign } from "@/lib/data";
 import DonatePanel from "./DonatePanel";
@@ -43,7 +44,7 @@ export default function CampaignDetail({ c }: { c: Campaign }) {
 
           <section className="card mt-6 p-6">
             <h2 className="text-lg font-semibold text-fg">{t.campaign.story}</h2>
-            <p className="mt-3 leading-relaxed text-fg-muted">{c.story}</p>
+            <p className="mt-3 leading-relaxed text-fg-muted"><Tr>{c.story}</Tr></p>
           </section>
 
           <section className="card mt-6 p-6">
@@ -52,7 +53,7 @@ export default function CampaignDetail({ c }: { c: Campaign }) {
               {c.goals.map((g) => (
                 <li key={g} className="flex gap-3 text-fg-muted">
                   <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                  {g}
+                  <Tr>{g}</Tr>
                 </li>
               ))}
             </ul>
@@ -64,7 +65,7 @@ export default function CampaignDetail({ c }: { c: Campaign }) {
               {c.updates.map((u) => (
                 <li key={u.date} className="border-l-2 border-line/10 pl-4">
                   <p className="text-xs text-fg-muted/70">{u.date}</p>
-                  <p className="text-sm text-fg-muted">{u.text}</p>
+                  <p className="text-sm text-fg-muted"><Tr>{u.text}</Tr></p>
                 </li>
               ))}
             </ol>

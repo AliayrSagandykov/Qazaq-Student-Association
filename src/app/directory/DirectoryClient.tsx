@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Avatar from "@/components/Avatar";
+import Tr from "@/components/Tr";
 import { useApp } from "@/components/Providers";
 import type { Member } from "@/lib/data";
 
@@ -94,7 +95,7 @@ export default function DirectoryClient({ members }: { members: Member[] }) {
             <h3 className="mt-4 font-semibold text-fg">{m.name}</h3>
             <p className="text-sm text-fg-muted">{m.major} · {m.degree}</p>
             <p className="mt-1 text-xs text-fg-muted/70">{m.university}</p>
-            <p className="mt-3 text-sm text-fg-muted">{m.bio}</p>
+            <p className="mt-3 text-sm text-fg-muted"><Tr>{m.bio}</Tr></p>
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="chip">{m.industry}</span>
               <span className="chip">{m.city}, {m.state}</span>
