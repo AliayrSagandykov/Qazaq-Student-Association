@@ -23,6 +23,7 @@ function str(v: unknown): string {
 function mapMember(r: Row): Member {
   return {
     id: String(r.id),
+    userId: r.user_id ? String(r.user_id) : undefined,
     name: str(r.name),
     university: str(r.university),
     major: str(r.major),
@@ -33,6 +34,7 @@ function mapMember(r: Row): Member {
     industry: str(r.industry),
     isAlumni: Boolean(r.is_alumni),
     bio: str(r.bio),
+    about: r.about ? String(r.about) : undefined,
     initials: str(r.initials),
     avatarUrl: r.avatar_url ? String(r.avatar_url) : undefined,
     linkedin: r.linkedin ? String(r.linkedin) : undefined,
@@ -101,12 +103,28 @@ export async function getMembers(): Promise<Member[]> {
   return data.map(mapMember);
 }
 
+export async function getMemberById(id: string): Promise<Member | undefined> {
+  const db = getSupabase();
+  if (!db) return mockMembers.find((m) => m.id === id);
+  const { data, error } = await db.from("profiles").select("*").eq("id", id).maybeSingle();
+  if (error || !data) return undefined;
+  return mapMember(data);
+}
+
 export async function getEvents(): Promise<PlatformEvent[]> {
   const db = getSupabase();
   if (!db) return mockEvents;
   const { data, error } = await db.from("events").select("*").order("date");
   if (error || !data) return mockEvents;
   return data.map(mapEvent);
+}
+
+export async function getEventById(id: string): Promise<PlatformEvent | undefined> {
+  const db = getSupabase();
+  if (!db) return mockEvents.find((e) => e.id === id);
+  const { data, error } = await db.from("events").select("*").eq("id", id).maybeSingle();
+  if (error || !data) return undefined;
+  return mapEvent(data);
 }
 
 export async function getCampaigns(): Promise<Campaign[]> {

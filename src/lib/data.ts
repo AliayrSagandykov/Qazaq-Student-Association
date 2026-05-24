@@ -5,6 +5,7 @@ export type DegreeLevel = "Bachelor's" | "Master's" | "PhD";
 
 export interface Member {
   id: string;
+  userId?: string;
   name: string;
   university: string;
   major: string;
@@ -15,6 +16,7 @@ export interface Member {
   industry: string;
   isAlumni: boolean;
   bio: string;
+  about?: string;
   initials: string;
   avatarUrl?: string;
   linkedin?: string;

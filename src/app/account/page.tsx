@@ -17,6 +17,7 @@ interface ProfileForm {
   city: string;
   industry: string;
   bio: string;
+  about: string;
   is_alumni: boolean;
   avatar_url: string;
   linkedin: string;
@@ -34,6 +35,7 @@ const EMPTY: ProfileForm = {
   city: "",
   industry: "",
   bio: "",
+  about: "",
   is_alumni: false,
   avatar_url: "",
   linkedin: "",
@@ -96,6 +98,7 @@ export default function AccountPage() {
           city: profile.city ?? "",
           industry: profile.industry ?? "",
           bio: profile.bio ?? "",
+          about: profile.about ?? "",
           is_alumni: Boolean(profile.is_alumni),
           avatar_url: profile.avatar_url ?? "",
           linkedin: profile.linkedin ?? "",
@@ -126,6 +129,7 @@ export default function AccountPage() {
         city: form.city || null,
         industry: form.industry || null,
         bio: form.bio,
+        about: form.about || null,
         is_alumni: form.is_alumni,
         initials: initialsOf(form.name),
         avatar_url: form.avatar_url || null,
@@ -249,9 +253,23 @@ export default function AccountPage() {
                 setForm({ ...form, bio: e.target.value });
                 setStatus("idle");
               }}
-              rows={3}
+              rows={2}
               className={inputClass}
             />
+            <span className="mt-1 block text-xs text-fg-muted/70">{t.profile.bioHint}</span>
+          </label>
+          <label className="block sm:col-span-2">
+            <span className="text-sm text-fg-muted">{t.profile.about}</span>
+            <textarea
+              value={form.about}
+              onChange={(e) => {
+                setForm({ ...form, about: e.target.value });
+                setStatus("idle");
+              }}
+              rows={5}
+              className={inputClass}
+            />
+            <span className="mt-1 block text-xs text-fg-muted/70">{t.profile.aboutHint}</span>
           </label>
         </div>
 
