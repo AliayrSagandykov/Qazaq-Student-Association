@@ -22,10 +22,35 @@ export interface Dictionary {
     directory: string;
     events: string;
     crowdfunding: string;
+    news: string;
     signIn: string;
     join: string;
     account: string;
     moderation: string;
+  };
+  news: {
+    title: string;
+    sub: string;
+    readMore: string;
+    empty: string;
+    back: string;
+    create: string;
+    catNews: string;
+    catStory: string;
+    catPress: string;
+  };
+  newsNew: {
+    title: string;
+    intro: string;
+    notAuthorized: string;
+    titleField: string;
+    excerpt: string;
+    body: string;
+    category: string;
+    submit: string;
+    submitting: string;
+    success: string;
+    error: string;
   };
   theme: { toLight: string; toDark: string };
   hero: {
@@ -221,10 +246,35 @@ export const translations: Record<Locale, Dictionary> = {
       directory: "Directory",
       events: "Events",
       crowdfunding: "Crowdfunding",
+      news: "News",
       signIn: "Sign in",
       join: "Join",
       account: "Account",
       moderation: "Moderation",
+    },
+    news: {
+      title: "News & Media",
+      sub: "Community updates, student highlights, and success stories.",
+      readMore: "Read more →",
+      empty: "No posts yet.",
+      back: "← Back to news",
+      create: "New post",
+      catNews: "News",
+      catStory: "Story",
+      catPress: "Press",
+    },
+    newsNew: {
+      title: "New post",
+      intro: "Publish a community update, story, or press release.",
+      notAuthorized: "You do not have access to this page.",
+      titleField: "Title",
+      excerpt: "Short excerpt",
+      body: "Body",
+      category: "Category",
+      submit: "Publish",
+      submitting: "Publishing…",
+      success: "Published!",
+      error: "Could not publish. Please try again.",
     },
     theme: { toLight: "Light mode", toDark: "Dark mode" },
     hero: {
@@ -465,10 +515,35 @@ export const translations: Record<Locale, Dictionary> = {
       directory: "Каталог",
       events: "Іс-шаралар",
       crowdfunding: "Қаражат жинау",
+      news: "Жаңалықтар",
       signIn: "Кіру",
       join: "Қосылу",
       account: "Профиль",
       moderation: "Модерация",
+    },
+    news: {
+      title: "Жаңалықтар мен медиа",
+      sub: "Қоғамдастық жаңалықтары, студенттер жетістіктері және табыс әңгімелері.",
+      readMore: "Толығырақ →",
+      empty: "Әзірге жазба жоқ.",
+      back: "← Жаңалықтарға оралу",
+      create: "Жаңа жазба",
+      catNews: "Жаңалық",
+      catStory: "Әңгіме",
+      catPress: "Баспасөз",
+    },
+    newsNew: {
+      title: "Жаңа жазба",
+      intro: "Қоғамдастық жаңалығын, әңгімені немесе баспасөз релизін жариялаңыз.",
+      notAuthorized: "Бұл бетке кіруге рұқсатыңыз жоқ.",
+      titleField: "Тақырып",
+      excerpt: "Қысқаша үзінді",
+      body: "Мәтін",
+      category: "Санат",
+      submit: "Жариялау",
+      submitting: "Жариялануда…",
+      success: "Жарияланды!",
+      error: "Жариялау мүмкін болмады. Қайта көріңіз.",
     },
     theme: { toLight: "Жарық режимі", toDark: "Қараңғы режим" },
     hero: {
@@ -709,10 +784,35 @@ export const translations: Record<Locale, Dictionary> = {
       directory: "Каталог",
       events: "События",
       crowdfunding: "Сбор средств",
+      news: "Новости",
       signIn: "Войти",
       join: "Вступить",
       account: "Профиль",
       moderation: "Модерация",
+    },
+    news: {
+      title: "Новости и медиа",
+      sub: "Новости сообщества, достижения студентов и истории успеха.",
+      readMore: "Подробнее →",
+      empty: "Пока нет публикаций.",
+      back: "← Назад к новостям",
+      create: "Новый пост",
+      catNews: "Новость",
+      catStory: "История",
+      catPress: "Пресса",
+    },
+    newsNew: {
+      title: "Новый пост",
+      intro: "Опубликуйте новость сообщества, историю или пресс-релиз.",
+      notAuthorized: "У вас нет доступа к этой странице.",
+      titleField: "Заголовок",
+      excerpt: "Краткое описание",
+      body: "Текст",
+      category: "Категория",
+      submit: "Опубликовать",
+      submitting: "Публикация…",
+      success: "Опубликовано!",
+      error: "Не удалось опубликовать. Попробуйте снова.",
     },
     theme: { toLight: "Светлая тема", toDark: "Тёмная тема" },
     hero: {

@@ -3,10 +3,12 @@ import {
   members as mockMembers,
   events as mockEvents,
   campaigns as mockCampaigns,
+  newsPosts as mockNews,
   type Member,
   type PlatformEvent,
   type Campaign,
   type DonationEntry,
+  type NewsPost,
 } from "./data";
 
 // Data access layer. Reads from Supabase when configured, otherwise serves
@@ -128,4 +130,36 @@ export async function getCampaignById(id: string): Promise<Campaign | undefined>
     .maybeSingle();
   if (error || !data) return undefined;
   return mapCampaign(data);
+}
+
+function mapNews(r: Row): NewsPost {
+  return {
+    id: String(r.id),
+    title: str(r.title),
+    excerpt: str(r.excerpt),
+    body: str(r.body),
+    coverUrl: r.cover_url ? String(r.cover_url) : undefined,
+    category: r.category as NewsPost["category"],
+    date: String(r.created_at ?? r.date),
+  };
+}
+
+export async function getNewsPosts(): Promise<NewsPost[]> {
+  const db = getSupabase();
+  if (!db) return mockNews;
+  const { data, error } = await db
+    .from("news_posts")
+    .select("*")
+    .eq("published", true)
+    .order("created_at", { ascending: false });
+  if (error || !data) return mockNews;
+  return data.map(mapNews);
+}
+
+export async function getNewsPostById(id: string): Promise<NewsPost | undefined> {
+  const db = getSupabase();
+  if (!db) return mockNews.find((n) => n.id === id);
+  const { data, error } = await db.from("news_posts").select("*").eq("id", id).maybeSingle();
+  if (error || !data) return undefined;
+  return mapNews(data);
 }

@@ -43,6 +43,7 @@ export default function Navbar() {
     { href: "/directory", label: t.nav.directory },
     { href: "/events", label: t.nav.events },
     { href: "/crowdfunding", label: t.nav.crowdfunding },
+    { href: "/news", label: t.nav.news },
     ...(isModerator ? [{ href: "/moderation", label: t.nav.moderation }] : []),
   ];
 

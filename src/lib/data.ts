@@ -43,6 +43,18 @@ export interface DonationEntry {
   anonymous: boolean;
 }
 
+export type NewsCategory = "News" | "Story" | "Press";
+
+export interface NewsPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  coverUrl?: string;
+  category: NewsCategory;
+  date: string; // ISO
+}
+
 export interface Campaign {
   id: string;
   studentName: string;
@@ -328,5 +340,24 @@ export const campaigns: Campaign[] = [
       { donor: "Daniyar S.", amount: 500, anonymous: false },
     ],
     updates: [{ date: "2026-04-20", text: "Almost funded — 90% reached!" }],
+  },
+];
+
+export const newsPosts: NewsPost[] = [
+  {
+    id: "n1",
+    title: "Association launches its national platform",
+    excerpt: "A single home for Kazakh students and alumni across the United States.",
+    body: "Today we are launching the association's platform — a permanent network connecting Kazakh students, graduates, founders, and professionals across the United States. The platform brings together a community directory, a map-first events system, student crowdfunding, and mentorship into one place. This is the first step toward building lasting infrastructure for the next generation of Kazakh talent.",
+    category: "News",
+    date: "2026-05-01",
+  },
+  {
+    id: "n2",
+    title: "From Almaty to Cornell: a first-generation story",
+    excerpt: "How community support helped one student close the tuition gap.",
+    body: "When Aibek was admitted to Cornell, a significant tuition gap stood between him and his dream. Through the association's crowdfunding community, donors large and small came together to help him enroll. His story is exactly why this network exists: talent should never be limited by geography or financial barriers.",
+    category: "Story",
+    date: "2026-04-18",
   },
 ];
