@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getNewsPostById } from "@/lib/queries";
 import NewsArticle from "./NewsArticle";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export async function generateMetadata({
   params,

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Avatar from "@/components/Avatar";
 import Progress from "@/components/Progress";
+import Tr from "@/components/Tr";
 import { useApp } from "@/components/Providers";
 import type { Member, PlatformEvent, Campaign } from "@/lib/data";
 
@@ -128,7 +129,7 @@ export default function LandingClient({
                 <h3 className="mt-4 font-semibold text-fg">{m.name}</h3>
                 <p className="text-sm text-fg-muted">{m.major}</p>
                 <p className="mt-1 text-xs text-fg-muted/70">{m.university}</p>
-                <p className="mt-3 text-sm text-fg-muted">{m.bio}</p>
+                <p className="mt-3 text-sm text-fg-muted"><Tr>{m.bio}</Tr></p>
               </div>
             </Reveal>
           ))}
@@ -175,7 +176,7 @@ export default function LandingClient({
                     <p className="text-xs text-fg-muted/70">{c.university}</p>
                   </div>
                 </div>
-                <p className="mt-4 text-sm text-fg-muted">{c.shortBio}</p>
+                <p className="mt-4 text-sm text-fg-muted"><Tr>{c.shortBio}</Tr></p>
                 <div className="mt-5">
                   <Progress raised={c.raised} target={c.target} />
                 </div>
@@ -206,8 +207,8 @@ export default function LandingClient({
                   <span className="chip">{e.category}</span>
                   <span className="text-sm text-fg-muted">{formatDate(e.date)}</span>
                 </div>
-                <h3 className="mt-4 font-semibold text-fg">{e.title}</h3>
-                <p className="mt-2 text-sm text-fg-muted">{e.description}</p>
+                <h3 className="mt-4 font-semibold text-fg"><Tr>{e.title}</Tr></h3>
+                <p className="mt-2 text-sm text-fg-muted"><Tr>{e.description}</Tr></p>
                 <p className="mt-4 text-xs text-fg-muted/70">
                   {e.venue} · {e.city}, {e.state}
                 </p>

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import CrowdfundingClient from "./CrowdfundingClient";
 import { getCampaigns } from "@/lib/queries";
 
-// Render on each request so newly approved campaigns show up immediately.
-export const dynamic = "force-dynamic";
+// Cached for fast loads, refreshed in the background every 30s.
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: "Crowdfunding",

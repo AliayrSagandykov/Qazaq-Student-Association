@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/Providers";
+import Tr from "@/components/Tr";
 import type { PlatformEvent } from "@/lib/data";
 
 const EventsMap = dynamic(() => import("@/components/EventsMap"), {
@@ -156,8 +157,8 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
 
               <div className="card p-6">
                 <span className="chip">{selected.category}</span>
-                <h3 className="mt-3 text-xl font-bold text-fg">{selected.title}</h3>
-                <p className="mt-2 text-sm text-fg-muted">{selected.description}</p>
+                <h3 className="mt-3 text-xl font-bold text-fg"><Tr>{selected.title}</Tr></h3>
+                <p className="mt-2 text-sm text-fg-muted"><Tr>{selected.description}</Tr></p>
                 <dl className="mt-5 space-y-2 text-sm">
                   <div className="flex justify-between">
                     <dt className="text-fg-muted/70">{t.events.when}</dt>
@@ -208,8 +209,8 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
                     <span className="chip">{e.category}</span>
                     <span className="text-sm text-fg-muted">{formatDateTime(e.date)}</span>
                   </div>
-                  <h3 className="mt-3 text-lg font-semibold text-fg">{e.title}</h3>
-                  <p className="mt-2 text-sm text-fg-muted">{e.description}</p>
+                  <h3 className="mt-3 text-lg font-semibold text-fg"><Tr>{e.title}</Tr></h3>
+                  <p className="mt-2 text-sm text-fg-muted"><Tr>{e.description}</Tr></p>
                   <p className="mt-3 text-xs text-fg-muted/70">
                     {t.events.organizer}: <span className="text-fg-muted">{e.organizer}</span>
                   </p>
