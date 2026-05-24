@@ -1,21 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/Providers";
 import type { PlatformEvent } from "@/lib/data";
 
-const BOUNDS = { minLng: -125, maxLng: -66, minLat: 24, maxLat: 50 };
-
-function project(lat: number, lng: number) {
-  const x = ((lng - BOUNDS.minLng) / (BOUNDS.maxLng - BOUNDS.minLng)) * 100;
-  const y = ((BOUNDS.maxLat - lat) / (BOUNDS.maxLat - BOUNDS.minLat)) * 100;
-  return { x, y };
-}
+const EventsMap = dynamic(() => import("@/components/EventsMap"), {
+  ssr: false,
+  loading: () => <div className="h-full w-full animate-pulse rounded-2xl bg-surface" />,
+});
 
 export default function EventsClient({ events }: { events: PlatformEvent[] }) {
   const { t, locale } = useApp();
+  const router = useRouter();
+  const supabase = createClient();
   const localeTag = locale === "kk" ? "kk-KZ" : locale === "ru" ? "ru-RU" : "en-US";
   const formatDateTime = (iso: string) =>
     new Date(iso).toLocaleString(localeTag, {
@@ -26,8 +27,6 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
       minute: "2-digit",
     });
 
-  const router = useRouter();
-  const supabase = createClient();
   const sorted = [...events].sort((a, b) => +new Date(a.date) - +new Date(b.date));
   const [view, setView] = useState<"map" | "list">("map");
   const [selectedId, setSelectedId] = useState<string | null>(sorted[0]?.id ?? null);
@@ -36,6 +35,8 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
   const [userId, setUserId] = useState<string | null>(null);
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [mine, setMine] = useState<Set<string>>(new Set());
+  const [attendeesByEvent, setAttendeesByEvent] = useState<Record<string, string[]>>({});
+  const [namesById, setNamesById] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,12 +51,29 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
         .in("event_id", ids);
       const c: Record<string, number> = {};
       const m = new Set<string>();
+      const byEvent: Record<string, string[]> = {};
+      const userIds = new Set<string>();
       (data ?? []).forEach((r: { event_id: string; user_id: string }) => {
         c[r.event_id] = (c[r.event_id] ?? 0) + 1;
+        (byEvent[r.event_id] ??= []).push(r.user_id);
+        userIds.add(r.user_id);
         if (r.user_id === auth.user?.id) m.add(r.event_id);
       });
       setCounts(c);
       setMine(m);
+      setAttendeesByEvent(byEvent);
+
+      if (userIds.size) {
+        const { data: profs } = await supabase
+          .from("profiles")
+          .select("user_id, name")
+          .in("user_id", Array.from(userIds));
+        const names: Record<string, string> = {};
+        (profs ?? []).forEach((p: { user_id: string; name: string | null }) => {
+          if (p.name) names[p.user_id] = p.name;
+        });
+        setNamesById(names);
+      }
     })();
   }, [supabase, events]);
 
@@ -75,20 +93,42 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
         return n;
       });
       setCounts((c) => ({ ...c, [eventId]: Math.max(0, (c[eventId] ?? 1) - 1) }));
+      setAttendeesByEvent((a) => ({ ...a, [eventId]: (a[eventId] ?? []).filter((u) => u !== userId) }));
     } else {
       await supabase.from("event_rsvps").insert({ event_id: eventId, user_id: userId });
       setMine((s) => new Set(s).add(eventId));
       setCounts((c) => ({ ...c, [eventId]: (c[eventId] ?? 0) + 1 }));
+      setAttendeesByEvent((a) => ({ ...a, [eventId]: [...(a[eventId] ?? []), userId] }));
     }
     setBusy(null);
   }
 
   const attendingCount = (e: PlatformEvent) => e.attendees + (counts[e.id] ?? 0);
 
+  const markers = useMemo(
+    () =>
+      sorted
+        .filter((e) => Number.isFinite(e.lat) && Number.isFinite(e.lng) && (e.lat !== 0 || e.lng !== 0))
+        .map((e) => ({ id: e.id, lat: e.lat, lng: e.lng })),
+    [sorted],
+  );
+
+  const isOrganizer = selected && userId && selected.ownerId === userId;
+  const attendeeNames = selected
+    ? (attendeesByEvent[selected.id] ?? []).map((u) => namesById[u] ?? "—")
+    : [];
+
   return (
     <div className="container-page py-14">
-      <h1 className="text-3xl font-bold sm:text-4xl">{t.events.title}</h1>
-      <p className="mt-3 max-w-2xl text-fg-muted">{t.events.sub}</p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold sm:text-4xl">{t.events.title}</h1>
+          <p className="mt-3 max-w-2xl text-fg-muted">{t.events.sub}</p>
+        </div>
+        <Link href="/events/new" className="btn-primary">
+          {t.events.create}
+        </Link>
+      </div>
 
       {!selected ? (
         <div className="card mt-10 p-10 text-center text-fg-muted">{t.events.empty}</div>
@@ -110,42 +150,8 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
 
           {view === "map" ? (
             <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-              <div
-                className="relative aspect-[1.6/1] w-full overflow-hidden rounded-2xl border border-line/10 bg-surface"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(rgba(127,127,127,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(127,127,127,0.12) 1px, transparent 1px)",
-                  backgroundSize: "32px 32px",
-                }}
-              >
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/5 to-accent-steppe/5" />
-                {sorted.map((e) => {
-                  const { x, y } = project(e.lat, e.lng);
-                  const active = e.id === selected.id;
-                  return (
-                    <button
-                      key={e.id}
-                      onClick={() => setSelectedId(e.id)}
-                      style={{ left: `${x}%`, top: `${y}%` }}
-                      className="group absolute -translate-x-1/2 -translate-y-1/2"
-                      aria-label={e.title}
-                    >
-                      <span
-                        className={`block rounded-full transition ${
-                          active
-                            ? "h-4 w-4 bg-accent ring-4 ring-accent/30"
-                            : "h-3 w-3 bg-accent-steppe hover:scale-125"
-                        }`}
-                      />
-                      <span className="pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 whitespace-nowrap rounded-md bg-bg px-2 py-1 text-xs text-fg opacity-0 shadow-lg transition group-hover:opacity-100">
-                        {e.city}
-                      </span>
-                    </button>
-                  );
-                })}
-                <span className="absolute bottom-3 right-4 text-xs text-fg-muted/70">
-                  {t.events.mapLabel}
-                </span>
+              <div className="h-[460px] overflow-hidden rounded-2xl border border-line/10">
+                <EventsMap markers={markers} selectedId={selectedId} onSelect={setSelectedId} />
               </div>
 
               <div className="card p-6">
@@ -177,6 +183,21 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
                 >
                   {mine.has(selected.id) ? t.events.cancel : t.events.rsvp}
                 </button>
+
+                {isOrganizer && (
+                  <div className="mt-6 border-t border-line/10 pt-4">
+                    <h4 className="text-sm font-semibold text-fg">{t.events.attendeesHeading}</h4>
+                    {attendeeNames.length === 0 ? (
+                      <p className="mt-2 text-sm text-fg-muted">{t.events.attendeesEmpty}</p>
+                    ) : (
+                      <ul className="mt-2 space-y-1 text-sm text-fg-muted">
+                        {attendeeNames.map((n, i) => (
+                          <li key={i}>{n}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           ) : (
@@ -189,7 +210,10 @@ export default function EventsClient({ events }: { events: PlatformEvent[] }) {
                   </div>
                   <h3 className="mt-3 text-lg font-semibold text-fg">{e.title}</h3>
                   <p className="mt-2 text-sm text-fg-muted">{e.description}</p>
-                  <p className="mt-4 text-xs text-fg-muted/70">
+                  <p className="mt-3 text-xs text-fg-muted/70">
+                    {t.events.organizer}: <span className="text-fg-muted">{e.organizer}</span>
+                  </p>
+                  <p className="mt-1 text-xs text-fg-muted/70">
                     {e.venue} · {e.city}, {e.state} · {attendingCount(e)} {t.events.attendingShort}
                   </p>
                   <button

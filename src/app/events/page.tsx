@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import EventsClient from "./EventsClient";
 import { getEvents } from "@/lib/queries";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Events",

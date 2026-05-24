@@ -55,6 +55,7 @@ function mapEvent(r: Row): PlatformEvent {
     lng: Number(r.lng),
     attendees: Number(r.attendees),
     category: r.category as PlatformEvent["category"],
+    ownerId: r.owner_id ? String(r.owner_id) : undefined,
   };
 }
 
@@ -117,7 +118,22 @@ export async function getCampaigns(): Promise<Campaign[]> {
     .eq("status", "approved")
     .order("created_at");
   if (error || !data) return mockCampaigns;
-  return data.map(mapCampaign);
+  const campaigns = data.map(mapCampaign);
+
+  // Attach each owner's profile photo for the campaign cards.
+  const ownerIds = data.map((r) => r.owner_id).filter(Boolean) as string[];
+  if (ownerIds.length) {
+    const { data: profs } = await db
+      .from("profiles")
+      .select("user_id, avatar_url")
+      .in("user_id", ownerIds);
+    const avatars = new Map((profs ?? []).map((p) => [p.user_id, p.avatar_url]));
+    campaigns.forEach((c, i) => {
+      const url = avatars.get(data[i].owner_id);
+      if (url) c.avatarUrl = String(url);
+    });
+  }
+  return campaigns;
 }
 
 export async function getCampaignById(id: string): Promise<Campaign | undefined> {
@@ -129,7 +145,16 @@ export async function getCampaignById(id: string): Promise<Campaign | undefined>
     .eq("id", id)
     .maybeSingle();
   if (error || !data) return undefined;
-  return mapCampaign(data);
+  const campaign = mapCampaign(data);
+  if (data.owner_id) {
+    const { data: prof } = await db
+      .from("profiles")
+      .select("avatar_url")
+      .eq("user_id", data.owner_id)
+      .maybeSingle();
+    if (prof?.avatar_url) campaign.avatarUrl = String(prof.avatar_url);
+  }
+  return campaign;
 }
 
 function mapNews(r: Row): NewsPost {

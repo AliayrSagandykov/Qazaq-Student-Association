@@ -117,6 +117,25 @@ export interface Dictionary {
     cancel: string;
     empty: string;
     mapLabel: string;
+    create: string;
+    attendeesHeading: string;
+    attendeesEmpty: string;
+  };
+  eventNew: {
+    title: string;
+    intro: string;
+    loginRequired: string;
+    titleField: string;
+    description: string;
+    category: string;
+    date: string;
+    city: string;
+    state: string;
+    venue: string;
+    pickLocation: string;
+    submit: string;
+    submitting: string;
+    error: string;
   };
   crowdfunding: {
     title: string;
@@ -387,6 +406,25 @@ export const translations: Record<Locale, Dictionary> = {
       cancel: "Cancel RSVP",
       empty: "No events scheduled yet.",
       mapLabel: "Interactive map · USA",
+      create: "Create event",
+      attendeesHeading: "Who's coming",
+      attendeesEmpty: "No one has RSVP'd yet.",
+    },
+    eventNew: {
+      title: "Create an event",
+      intro: "Add a meetup, conference, or gathering. Click the map to set the location.",
+      loginRequired: "Please sign in to create an event.",
+      titleField: "Title",
+      description: "Description",
+      category: "Category",
+      date: "Date & time",
+      city: "City",
+      state: "State",
+      venue: "Venue",
+      pickLocation: "Click the map to place your event",
+      submit: "Create event",
+      submitting: "Creating…",
+      error: "Could not create. Please try again.",
     },
     crowdfunding: {
       title: "Student Crowdfunding",
@@ -656,6 +694,25 @@ export const translations: Record<Locale, Dictionary> = {
       cancel: "Бас тарту",
       empty: "Әзірге жоспарланған іс-шара жоқ.",
       mapLabel: "Интерактивті карта · АҚШ",
+      create: "Іс-шара құру",
+      attendeesHeading: "Кім келеді",
+      attendeesEmpty: "Әзірге ешкім тіркелмеген.",
+    },
+    eventNew: {
+      title: "Іс-шара құру",
+      intro: "Кездесу, конференция немесе жиын қосыңыз. Орналасуын белгілеу үшін картаны басыңыз.",
+      loginRequired: "Іс-шара құру үшін жүйеге кіріңіз.",
+      titleField: "Тақырып",
+      description: "Сипаттама",
+      category: "Санат",
+      date: "Күні мен уақыты",
+      city: "Қала",
+      state: "Штат",
+      venue: "Орын",
+      pickLocation: "Іс-шараны орналастыру үшін картаны басыңыз",
+      submit: "Іс-шара құру",
+      submitting: "Құрылуда…",
+      error: "Құру мүмкін болмады. Қайта көріңіз.",
     },
     crowdfunding: {
       title: "Студенттерге қаражат жинау",
@@ -925,6 +982,25 @@ export const translations: Record<Locale, Dictionary> = {
       cancel: "Отменить",
       empty: "Пока нет запланированных событий.",
       mapLabel: "Интерактивная карта · США",
+      create: "Создать событие",
+      attendeesHeading: "Кто придёт",
+      attendeesEmpty: "Пока никто не записался.",
+    },
+    eventNew: {
+      title: "Создать событие",
+      intro: "Добавьте встречу, конференцию или сбор. Кликните по карте, чтобы указать место.",
+      loginRequired: "Войдите, чтобы создать событие.",
+      titleField: "Название",
+      description: "Описание",
+      category: "Категория",
+      date: "Дата и время",
+      city: "Город",
+      state: "Штат",
+      venue: "Место",
+      pickLocation: "Кликните по карте, чтобы разместить событие",
+      submit: "Создать событие",
+      submitting: "Создание…",
+      error: "Не удалось создать. Попробуйте снова.",
     },
     crowdfunding: {
       title: "Сбор средств для студентов",
