@@ -83,6 +83,33 @@ env vars above enable it — no extra config for email/password.
 When the env vars are absent, the login page shows a friendly "not configured" notice and
 the rest of the site keeps working on mock data.
 
+## Donations (Stripe)
+
+Donations use **Stripe Checkout** with a platform-collected model: all funds land in the
+association's Stripe account, and the team pays out students after verification. (Per-student
+payouts via Stripe Connect can be added later.)
+
+Flow: the donate panel posts to `/api/checkout`, which creates a Checkout Session and
+redirects to Stripe. After payment, the `/api/stripe/webhook` endpoint records the donation
+and increments the campaign's `raised` total, so the progress bar moves. One-time and monthly
+(recurring) donations and custom amounts are supported.
+
+### Setup
+
+1. Run `supabase/donations_stripe.sql` in the SQL editor.
+2. Add env vars (locally in `.env.local`, on Vercel in project settings):
+   ```
+   STRIPE_SECRET_KEY=sk_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
+   SUPABASE_SERVICE_ROLE_KEY=...   # Supabase → Settings → API (server-only)
+   NEXT_PUBLIC_SITE_URL=https://your-domain.com
+   ```
+3. In the Stripe dashboard → **Developers → Webhooks**, add an endpoint
+   `https://your-domain.com/api/stripe/webhook` subscribed to `checkout.session.completed`,
+   and copy its signing secret into `STRIPE_WEBHOOK_SECRET`.
+
+Without `STRIPE_SECRET_KEY` the donate button falls back to a demo acknowledgement.
+
 ## Project structure
 
 ```
