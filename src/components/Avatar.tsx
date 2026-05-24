@@ -16,6 +16,8 @@ export default function Avatar({
       <img
         src={src}
         alt={initials}
+        loading="lazy"
+        decoding="async"
         className={`${dims} shrink-0 rounded-full object-cover`}
       />
     );

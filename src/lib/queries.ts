@@ -37,6 +37,7 @@ function mapMember(r: Row): Member {
     about: r.about ? String(r.about) : undefined,
     initials: str(r.initials),
     avatarUrl: r.avatar_url ? String(r.avatar_url) : undefined,
+    bannerUrl: r.banner_url ? String(r.banner_url) : undefined,
     linkedin: r.linkedin ? String(r.linkedin) : undefined,
     website: r.website ? String(r.website) : undefined,
     publicEmail: r.public_email ? String(r.public_email) : undefined,
@@ -86,6 +87,8 @@ function mapCampaign(r: Row): Campaign {
     verified: Boolean(r.verified),
     donors,
     updates: updateRows.map((u) => ({ date: String(u.date), text: String(u.text) })),
+    images: (r.images as string[] | null) ?? [],
+    videoUrl: r.video_url ? String(r.video_url) : undefined,
   };
 }
 
@@ -182,6 +185,7 @@ function mapNews(r: Row): NewsPost {
     excerpt: str(r.excerpt),
     body: str(r.body),
     coverUrl: r.cover_url ? String(r.cover_url) : undefined,
+    images: (r.images as string[] | null) ?? [],
     category: r.category as NewsPost["category"],
     date: String(r.created_at ?? r.date),
   };

@@ -6,20 +6,32 @@ import { LOCALES, LOCALE_LABELS } from "@/i18n/translations";
 export function LanguageSwitcher() {
   const { locale, setLocale } = useApp();
   return (
-    <div className="inline-flex items-center rounded-full border border-line/15 p-0.5 text-xs">
-      {LOCALES.map((l) => (
-        <button
-          key={l}
-          onClick={() => setLocale(l)}
-          aria-pressed={locale === l}
-          className={`rounded-full px-2.5 py-1 font-medium transition ${
-            locale === l ? "bg-accent text-white" : "text-fg-muted hover:text-fg"
-          }`}
-        >
-          {LOCALE_LABELS[l]}
-        </button>
-      ))}
-    </div>
+    <label className="relative inline-flex items-center">
+      <span className="sr-only">Language</span>
+      <select
+        value={locale}
+        onChange={(e) => setLocale(e.target.value as (typeof LOCALES)[number])}
+        className="cursor-pointer appearance-none rounded-full border border-line/15 bg-transparent py-1.5 pl-3 pr-7 text-xs font-medium uppercase text-fg-muted outline-none transition hover:text-fg focus:border-accent/60"
+      >
+        {LOCALES.map((l) => (
+          <option key={l} value={l} className="bg-surface text-fg">
+            {LOCALE_LABELS[l]}
+          </option>
+        ))}
+      </select>
+      <svg
+        aria-hidden="true"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        className="pointer-events-none absolute right-2 text-fg-muted"
+      >
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </label>
   );
 }
 

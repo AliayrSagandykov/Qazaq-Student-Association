@@ -19,6 +19,7 @@ export interface Member {
   about?: string;
   initials: string;
   avatarUrl?: string;
+  bannerUrl?: string;
   linkedin?: string;
   website?: string;
   publicEmail?: string;
@@ -54,6 +55,7 @@ export interface NewsPost {
   excerpt: string;
   body: string;
   coverUrl?: string;
+  images?: string[];
   category: NewsCategory;
   date: string; // ISO
 }
@@ -76,6 +78,8 @@ export interface Campaign {
   donors: DonationEntry[];
   updates: { date: string; text: string }[];
   avatarUrl?: string;
+  images?: string[];
+  videoUrl?: string;
 }
 
 export const members: Member[] = [

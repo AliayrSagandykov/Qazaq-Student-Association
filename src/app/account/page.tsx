@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient, isAuthConfigured } from "@/lib/supabase/client";
+import { uploadMedia } from "@/lib/upload";
 import { useApp } from "@/components/Providers";
 import Avatar from "@/components/Avatar";
+import MemberProfile from "@/app/members/[id]/MemberProfile";
+import type { Member, DegreeLevel } from "@/lib/data";
 
 interface ProfileForm {
   name: string;
@@ -20,6 +23,7 @@ interface ProfileForm {
   about: string;
   is_alumni: boolean;
   avatar_url: string;
+  banner_url: string;
   linkedin: string;
   website: string;
   public_email: string;
@@ -38,6 +42,7 @@ const EMPTY: ProfileForm = {
   about: "",
   is_alumni: false,
   avatar_url: "",
+  banner_url: "",
   linkedin: "",
   website: "",
   public_email: "",
@@ -63,6 +68,8 @@ export default function AccountPage() {
   const [form, setForm] = useState<ProfileForm>(EMPTY);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [uploading, setUploading] = useState(false);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -101,6 +108,7 @@ export default function AccountPage() {
           about: profile.about ?? "",
           is_alumni: Boolean(profile.is_alumni),
           avatar_url: profile.avatar_url ?? "",
+          banner_url: profile.banner_url ?? "",
           linkedin: profile.linkedin ?? "",
           website: profile.website ?? "",
           public_email: profile.public_email ?? "",
@@ -133,6 +141,7 @@ export default function AccountPage() {
         is_alumni: form.is_alumni,
         initials: initialsOf(form.name),
         avatar_url: form.avatar_url || null,
+        banner_url: form.banner_url || null,
         linkedin: form.linkedin || null,
         website: form.website || null,
         public_email: form.public_email || null,
@@ -158,6 +167,40 @@ export default function AccountPage() {
     }
     setUploading(false);
   }
+
+  async function uploadBanner(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !supabase || !user) return;
+    setUploadingBanner(true);
+    const url = await uploadMedia(supabase, user.id, file);
+    if (url) {
+      setForm((f) => ({ ...f, banner_url: url }));
+      setStatus("idle");
+    }
+    setUploadingBanner(false);
+  }
+
+  const previewMember: Member = {
+    id: user?.id ?? "preview",
+    userId: user?.id,
+    name: form.name || (user?.email ?? ""),
+    university: form.university,
+    major: form.major,
+    degree: (form.degree || "Bachelor's") as DegreeLevel,
+    gradYear: form.grad_year ? Number(form.grad_year) : 0,
+    state: form.state,
+    city: form.city,
+    industry: form.industry,
+    isAlumni: form.is_alumni,
+    bio: form.bio,
+    about: form.about,
+    initials: initialsOf(form.name) || "?",
+    avatarUrl: form.avatar_url || undefined,
+    bannerUrl: form.banner_url || undefined,
+    linkedin: form.linkedin || undefined,
+    website: form.website || undefined,
+    publicEmail: form.public_email || undefined,
+  };
 
   async function signOut() {
     if (!supabase) return;
@@ -196,26 +239,57 @@ export default function AccountPage() {
 
   return (
     <div className="container-page py-16">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-3xl font-bold">{t.account.title}</h1>
-        <button onClick={signOut} className="btn-ghost !py-2">
-          {t.account.signOut}
-        </button>
-      </div>
-
-      <div className="mt-8 flex items-center gap-4">
-        <Avatar initials={initialsOf(form.name) || "?"} src={form.avatar_url || undefined} size="lg" />
-        <div>
-          <p className="font-semibold text-fg">{form.name || user.email}</p>
-          <p className="text-sm text-fg-muted">{user.email}</p>
-          <label className="mt-2 inline-flex cursor-pointer items-center text-sm text-accent hover:underline">
-            {uploading ? t.profile.uploading : t.profile.uploadPhoto}
-            <input type="file" accept="image/*" onChange={uploadPhoto} className="hidden" disabled={uploading} />
-          </label>
+        <div className="flex items-center gap-3">
+          <button onClick={() => setPreviewing((v) => !v)} className="btn-ghost !py-2">
+            {previewing ? t.profile.backToEdit : t.profile.preview}
+          </button>
+          <button onClick={signOut} className="btn-ghost !py-2">
+            {t.account.signOut}
+          </button>
         </div>
       </div>
 
-      <form onSubmit={save} className="card mt-8 max-w-2xl p-8">
+      {previewing && (
+        <div className="mt-8">
+          <p className="mb-4 rounded-xl border border-accent-steppe/30 bg-accent-steppe/10 p-3 text-sm text-fg">
+            {t.profile.previewNote}
+          </p>
+          <MemberProfile m={previewMember} preview />
+        </div>
+      )}
+
+      <div className={previewing ? "hidden" : ""}>
+        <div className="mt-8 overflow-hidden rounded-2xl border border-line/10">
+          {form.banner_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={form.banner_url} alt="" loading="lazy" decoding="async" className="h-32 w-full object-cover" />
+          ) : (
+            <div className="h-32 bg-gradient-to-br from-accent/30 via-accent-steppe/20 to-accent-gold/20" />
+          )}
+          <div className="flex justify-end bg-surface/60 px-4 py-2">
+            <label className="inline-flex cursor-pointer items-center text-sm text-accent hover:underline">
+              {uploadingBanner ? t.profile.uploading : t.profile.uploadBanner}
+              <input type="file" accept="image/*" onChange={uploadBanner} className="hidden" disabled={uploadingBanner} />
+            </label>
+          </div>
+        </div>
+
+        <div className="mt-6 flex items-center gap-4">
+          <Avatar initials={initialsOf(form.name) || "?"} src={form.avatar_url || undefined} size="lg" />
+          <div>
+            <p className="font-semibold text-fg">{form.name || user.email}</p>
+            <p className="text-sm text-fg-muted">{user.email}</p>
+            <label className="mt-2 inline-flex cursor-pointer items-center text-sm text-accent hover:underline">
+              {uploading ? t.profile.uploading : t.profile.uploadPhoto}
+              <input type="file" accept="image/*" onChange={uploadPhoto} className="hidden" disabled={uploading} />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <form onSubmit={save} className={`card mt-8 max-w-2xl p-8 ${previewing ? "hidden" : ""}`}>
         <h2 className="text-lg font-semibold">{t.profile.heading}</h2>
         <p className="mt-1 text-sm text-fg-muted">{t.profile.hint}</p>
 

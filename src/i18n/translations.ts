@@ -7,9 +7,9 @@ export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "kk";
 
 export const LOCALE_LABELS: Record<Locale, string> = {
-  kk: "Қаз",
-  en: "Eng",
-  ru: "Рус",
+  kk: "kz",
+  en: "en",
+  ru: "ru",
 };
 
 interface TitleBody {
@@ -39,6 +39,7 @@ export interface Dictionary {
     catNews: string;
     catStory: string;
     catPress: string;
+    gallery: string;
   };
   newsNew: {
     title: string;
@@ -52,6 +53,11 @@ export interface Dictionary {
     submitting: string;
     success: string;
     error: string;
+    cover: string;
+    coverHint: string;
+    images: string;
+    imagesHint: string;
+    uploading: string;
   };
   theme: { toLight: string; toDark: string };
   hero: {
@@ -192,6 +198,13 @@ export interface Dictionary {
     submitting: string;
     success: string;
     error: string;
+    images: string;
+    imagesHint: string;
+    video: string;
+    videoHint: string;
+    mustRegister: string;
+    register: string;
+    uploading: string;
   };
   moderation: {
     title: string;
@@ -225,6 +238,8 @@ export interface Dictionary {
     donorName: string;
     processing: string;
     donatedSuccess: string;
+    gallery: string;
+    video: string;
   };
   login: {
     welcome: string;
@@ -280,6 +295,11 @@ export interface Dictionary {
     website: string;
     publicEmail: string;
     publicEmailHint: string;
+    banner: string;
+    uploadBanner: string;
+    preview: string;
+    backToEdit: string;
+    previewNote: string;
   };
 }
 
@@ -306,6 +326,7 @@ export const translations: Record<Locale, Dictionary> = {
       catNews: "News",
       catStory: "Story",
       catPress: "Press",
+      gallery: "Gallery",
     },
     newsNew: {
       title: "New post",
@@ -319,6 +340,11 @@ export const translations: Record<Locale, Dictionary> = {
       submitting: "Publishing…",
       success: "Published!",
       error: "Could not publish. Please try again.",
+      cover: "Main photo (banner)",
+      coverHint: "Shown as the banner in the news list and at the top of the article.",
+      images: "Gallery photos",
+      imagesHint: "Add more photos readers can scroll through.",
+      uploading: "Uploading…",
     },
     theme: { toLight: "Light mode", toDark: "Dark mode" },
     hero: {
@@ -505,6 +531,13 @@ export const translations: Record<Locale, Dictionary> = {
       submitting: "Submitting…",
       success: "Submitted! Your campaign is now pending moderator review.",
       error: "Could not submit. Please try again.",
+      images: "Photos (up to 10)",
+      imagesHint: "Show people what you've been working on.",
+      video: "YouTube video (optional)",
+      videoHint: "Paste a link to your official appeal or introduction.",
+      mustRegister: "You need an account to start a campaign.",
+      register: "Sign in or register",
+      uploading: "Uploading…",
     },
     moderation: {
       title: "Moderation",
@@ -538,6 +571,8 @@ export const translations: Record<Locale, Dictionary> = {
       donorName: "Name on the donor wall (optional)",
       processing: "Redirecting to checkout…",
       donatedSuccess: "Thank you for your donation! It may take a moment to appear.",
+      gallery: "Gallery",
+      video: "Video",
     },
     login: {
       welcome: "Welcome back",
@@ -593,6 +628,11 @@ export const translations: Record<Locale, Dictionary> = {
       website: "Website",
       publicEmail: "Public email",
       publicEmailHint: "Shown on your directory card so members can reach you.",
+      banner: "Cover banner",
+      uploadBanner: "Upload banner",
+      preview: "Preview public profile",
+      backToEdit: "Back to editing",
+      previewNote: "This is how other members see your profile.",
     },
   },
 
@@ -618,6 +658,7 @@ export const translations: Record<Locale, Dictionary> = {
       catNews: "Жаңалық",
       catStory: "Әңгіме",
       catPress: "Баспасөз",
+      gallery: "Галерея",
     },
     newsNew: {
       title: "Жаңа жазба",
@@ -631,6 +672,11 @@ export const translations: Record<Locale, Dictionary> = {
       submitting: "Жариялануда…",
       success: "Жарияланды!",
       error: "Жариялау мүмкін болмады. Қайта көріңіз.",
+      cover: "Негізгі сурет (баннер)",
+      coverHint: "Жаңалықтар тізімінде және мақаланың жоғарысында баннер ретінде көрсетіледі.",
+      images: "Галерея суреттері",
+      imagesHint: "Оқырмандар қарай алатын қосымша суреттер қосыңыз.",
+      uploading: "Жүктелуде…",
     },
     theme: { toLight: "Жарық режимі", toDark: "Қараңғы режим" },
     hero: {
@@ -817,6 +863,13 @@ export const translations: Record<Locale, Dictionary> = {
       submitting: "Жіберілуде…",
       success: "Жіберілді! Науқаныңыз модератор тексеруін күтуде.",
       error: "Жіберу мүмкін болмады. Қайта көріңіз.",
+      images: "Суреттер (10-ға дейін)",
+      imagesHint: "Немен айналысқаныңызды адамдарға көрсетіңіз.",
+      video: "YouTube видеосы (міндетті емес)",
+      videoHint: "Ресми үндеуіңізге немесе таныстырылымыңызға сілтеме қойыңыз.",
+      mustRegister: "Науқан бастау үшін аккаунт қажет.",
+      register: "Кіру немесе тіркелу",
+      uploading: "Жүктелуде…",
     },
     moderation: {
       title: "Модерация",
@@ -850,6 +903,8 @@ export const translations: Record<Locale, Dictionary> = {
       donorName: "Демеушілер қабырғасындағы атыңыз (міндетті емес)",
       processing: "Төлемге бағыттауда…",
       donatedSuccess: "Қайырымдылығыңызға рақмет! Көріну үшін біраз уақыт кетуі мүмкін.",
+      gallery: "Галерея",
+      video: "Видео",
     },
     login: {
       welcome: "Қайта келдіңіз",
@@ -905,6 +960,11 @@ export const translations: Record<Locale, Dictionary> = {
       website: "Сайт",
       publicEmail: "Ашық эл. пошта",
       publicEmailHint: "Қатысушылар хабарласа алуы үшін каталог картаңызда көрсетіледі.",
+      banner: "Мұқаба баннер",
+      uploadBanner: "Баннер жүктеу",
+      preview: "Ашық профильді алдын ала қарау",
+      backToEdit: "Өңдеуге оралу",
+      previewNote: "Профиліңізді басқа қатысушылар осылай көреді.",
     },
   },
 
@@ -930,6 +990,7 @@ export const translations: Record<Locale, Dictionary> = {
       catNews: "Новость",
       catStory: "История",
       catPress: "Пресса",
+      gallery: "Галерея",
     },
     newsNew: {
       title: "Новый пост",
@@ -943,6 +1004,11 @@ export const translations: Record<Locale, Dictionary> = {
       submitting: "Публикация…",
       success: "Опубликовано!",
       error: "Не удалось опубликовать. Попробуйте снова.",
+      cover: "Главное фото (баннер)",
+      coverHint: "Показывается баннером в списке новостей и вверху статьи.",
+      images: "Фото галереи",
+      imagesHint: "Добавьте больше фото, которые читатели смогут пролистать.",
+      uploading: "Загрузка…",
     },
     theme: { toLight: "Светлая тема", toDark: "Тёмная тема" },
     hero: {
@@ -1129,6 +1195,13 @@ export const translations: Record<Locale, Dictionary> = {
       submitting: "Отправка…",
       success: "Отправлено! Кампания ожидает проверки модератором.",
       error: "Не удалось отправить. Попробуйте снова.",
+      images: "Фото (до 10)",
+      imagesHint: "Покажите людям, чем вы занимались.",
+      video: "Видео с YouTube (необязательно)",
+      videoHint: "Вставьте ссылку на официальное обращение или знакомство.",
+      mustRegister: "Чтобы начать кампанию, нужен аккаунт.",
+      register: "Войти или зарегистрироваться",
+      uploading: "Загрузка…",
     },
     moderation: {
       title: "Модерация",
@@ -1162,6 +1235,8 @@ export const translations: Record<Locale, Dictionary> = {
       donorName: "Имя на стене доноров (необязательно)",
       processing: "Перенаправляем на оплату…",
       donatedSuccess: "Спасибо за пожертвование! Оно появится через мгновение.",
+      gallery: "Галерея",
+      video: "Видео",
     },
     login: {
       welcome: "С возвращением",
@@ -1217,6 +1292,11 @@ export const translations: Record<Locale, Dictionary> = {
       website: "Сайт",
       publicEmail: "Публичная почта",
       publicEmailHint: "Показывается на карточке в каталоге, чтобы с вами могли связаться.",
+      banner: "Баннер обложки",
+      uploadBanner: "Загрузить баннер",
+      preview: "Предпросмотр профиля",
+      backToEdit: "Вернуться к редактированию",
+      previewNote: "Так ваш профиль видят другие участники.",
     },
   },
 };

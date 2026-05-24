@@ -5,9 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient, isAuthConfigured } from "@/lib/supabase/client";
+import { uploadMedia } from "@/lib/upload";
 import { useApp } from "@/components/Providers";
 
 const DEGREES = ["Bachelor's", "Master's", "PhD"];
+const MAX_IMAGES = 10;
 
 function initialsOf(name: string) {
   return name.split(" ").map((p) => p[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
@@ -20,6 +22,8 @@ export default function NewCampaignPage() {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
+  const [images, setImages] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   const [form, setForm] = useState({
     studentName: "",
@@ -32,6 +36,7 @@ export default function NewCampaignPage() {
     goals: "",
     target: "",
     urgency: "Medium",
+    videoUrl: "",
   });
 
   useEffect(() => {
@@ -83,8 +88,25 @@ export default function NewCampaignPage() {
       urgency: form.urgency,
       verified: false,
       status: "pending",
+      images,
+      video_url: form.videoUrl || null,
     });
     setStatus(error ? "error" : "done");
+  }
+
+  async function addImages(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length || !supabase || !user) return;
+    setUploading(true);
+    const room = MAX_IMAGES - images.length;
+    const uploaded: string[] = [];
+    for (const file of files.slice(0, room)) {
+      const url = await uploadMedia(supabase, user.id, file);
+      if (url) uploaded.push(url);
+    }
+    setImages((prev) => [...prev, ...uploaded].slice(0, MAX_IMAGES));
+    setUploading(false);
+    e.target.value = "";
   }
 
   const inputClass =
@@ -97,8 +119,9 @@ export default function NewCampaignPage() {
   if (!isAuthConfigured || !user) {
     return (
       <div className="container-page py-24 text-center">
-        <p className="text-fg-muted">{t.campaignNew.loginRequired}</p>
-        <Link href="/login" className="btn-primary mt-6">{t.nav.signIn}</Link>
+        <h1 className="text-2xl font-bold">{t.campaignNew.title}</h1>
+        <p className="mx-auto mt-4 max-w-md text-fg-muted">{t.campaignNew.mustRegister}</p>
+        <Link href="/login" className="btn-primary mt-6">{t.campaignNew.register}</Link>
       </div>
     );
   }
@@ -164,11 +187,48 @@ export default function NewCampaignPage() {
             <span className="text-sm text-fg-muted">{t.campaignNew.story}</span>
             <textarea
               required
-              rows={5}
+              rows={12}
               value={form.story}
               onChange={(e) => setForm({ ...form, story: e.target.value })}
               className={inputClass}
             />
+          </label>
+          <div className="block sm:col-span-2">
+            <span className="text-sm text-fg-muted">{t.campaignNew.images}</span>
+            <p className="text-xs text-fg-muted/70">{t.campaignNew.imagesHint}</p>
+            <div className="mt-2 flex flex-wrap gap-3">
+              {images.map((url) => (
+                <div key={url} className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt="" loading="lazy" decoding="async" className="h-20 w-20 rounded-lg object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setImages((prev) => prev.filter((u) => u !== url))}
+                    className="absolute -right-2 -top-2 grid h-5 w-5 place-items-center rounded-full bg-bg text-xs text-fg-muted ring-1 ring-line/20"
+                    aria-label="Remove"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              {images.length < MAX_IMAGES && (
+                <label className="grid h-20 w-20 cursor-pointer place-items-center rounded-lg border border-dashed border-line/20 text-xs text-fg-muted hover:border-accent/60">
+                  {uploading ? t.campaignNew.uploading : `+ ${images.length}/${MAX_IMAGES}`}
+                  <input type="file" accept="image/*" multiple onChange={addImages} className="hidden" disabled={uploading} />
+                </label>
+              )}
+            </div>
+          </div>
+          <label className="block sm:col-span-2">
+            <span className="text-sm text-fg-muted">{t.campaignNew.video}</span>
+            <input
+              type="url"
+              value={form.videoUrl}
+              onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
+              placeholder="https://youtube.com/watch?v=…"
+              className={inputClass}
+            />
+            <span className="mt-1 block text-xs text-fg-muted/70">{t.campaignNew.videoHint}</span>
           </label>
           <label className="block sm:col-span-2">
             <span className="text-sm text-fg-muted">{t.campaignNew.goals}</span>
