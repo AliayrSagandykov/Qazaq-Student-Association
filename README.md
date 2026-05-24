@@ -42,8 +42,11 @@ back to mock data otherwise — so you can connect the database without touching
 
 1. Create a project at [supabase.com](https://supabase.com).
 2. In the **SQL Editor**, run, in order: `supabase/schema.sql`, `supabase/seed.sql`,
-   `supabase/profiles_auth.sql` (per-user editable profiles + RLS), and
-   `supabase/profiles_photo_contact.sql` (avatar storage bucket + contact fields).
+   `supabase/profiles_auth.sql` (per-user editable profiles + RLS),
+   `supabase/profiles_photo_contact.sql` (avatar storage bucket + contact fields), and
+   `supabase/campaigns_moderation.sql` (roles, campaign submission + moderation policies).
+   To make yourself a moderator, run:
+   `update public.profiles set role = 'admin' where email = 'you@example.com';`
 3. Copy `Project Settings → API → Project URL` and the `anon` key.
 4. Locally: copy `.env.example` to `.env.local` and fill in:
    ```

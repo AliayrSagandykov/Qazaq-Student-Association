@@ -25,6 +25,7 @@ export interface Dictionary {
     signIn: string;
     join: string;
     account: string;
+    moderation: string;
   };
   theme: { toLight: string; toDark: string };
   hero: {
@@ -99,6 +100,42 @@ export interface Dictionary {
     verified: string;
     urgencySuffix: string;
     all: string;
+    start: string;
+  };
+  campaignNew: {
+    title: string;
+    intro: string;
+    loginRequired: string;
+    studentName: string;
+    university: string;
+    major: string;
+    degree: string;
+    selectDegree: string;
+    state: string;
+    shortBio: string;
+    story: string;
+    goals: string;
+    goalsHint: string;
+    target: string;
+    urgency: string;
+    low: string;
+    medium: string;
+    high: string;
+    submit: string;
+    submitting: string;
+    success: string;
+    error: string;
+  };
+  moderation: {
+    title: string;
+    sub: string;
+    notAuthorized: string;
+    empty: string;
+    approve: string;
+    reject: string;
+    pending: string;
+    target: string;
+    loadError: string;
   };
   campaign: {
     back: string;
@@ -181,6 +218,7 @@ export const translations: Record<Locale, Dictionary> = {
       signIn: "Sign in",
       join: "Join",
       account: "Account",
+      moderation: "Moderation",
     },
     theme: { toLight: "Light mode", toDark: "Dark mode" },
     hero: {
@@ -301,6 +339,42 @@ export const translations: Record<Locale, Dictionary> = {
       verified: "Verified",
       urgencySuffix: "urgency",
       all: "All",
+      start: "Start a campaign",
+    },
+    campaignNew: {
+      title: "Start a campaign",
+      intro: "Submit your campaign for review. Moderators verify acceptance letters and tuition data before it goes live.",
+      loginRequired: "Please sign in to start a campaign.",
+      studentName: "Your name",
+      university: "University",
+      major: "Major",
+      degree: "Degree level",
+      selectDegree: "Select degree",
+      state: "State",
+      shortBio: "Short summary",
+      story: "Your story",
+      goals: "Goals",
+      goalsHint: "One goal per line.",
+      target: "Target amount (USD)",
+      urgency: "Urgency",
+      low: "Low",
+      medium: "Medium",
+      high: "High",
+      submit: "Submit for review",
+      submitting: "Submitting…",
+      success: "Submitted! Your campaign is now pending moderator review.",
+      error: "Could not submit. Please try again.",
+    },
+    moderation: {
+      title: "Moderation",
+      sub: "Review and approve pending crowdfunding campaigns.",
+      notAuthorized: "You do not have access to this page.",
+      empty: "No campaigns pending review.",
+      approve: "Approve",
+      reject: "Reject",
+      pending: "Pending",
+      target: "Target",
+      loadError: "Could not load campaigns.",
     },
     campaign: {
       back: "← Back to campaigns",
@@ -382,6 +456,7 @@ export const translations: Record<Locale, Dictionary> = {
       signIn: "Кіру",
       join: "Қосылу",
       account: "Профиль",
+      moderation: "Модерация",
     },
     theme: { toLight: "Жарық режимі", toDark: "Қараңғы режим" },
     hero: {
@@ -502,6 +577,42 @@ export const translations: Record<Locale, Dictionary> = {
       verified: "Тексерілген",
       urgencySuffix: "шұғылдық",
       all: "Барлығы",
+      start: "Науқан бастау",
+    },
+    campaignNew: {
+      title: "Науқан бастау",
+      intro: "Науқаныңызды тексеруге жіберіңіз. Модераторлар жариялаудан бұрын қабылдау хаттары мен оқу ақысын тексереді.",
+      loginRequired: "Науқан бастау үшін жүйеге кіріңіз.",
+      studentName: "Атыңыз",
+      university: "Университет",
+      major: "Мамандық",
+      degree: "Дәреже деңгейі",
+      selectDegree: "Дәрежені таңдаңыз",
+      state: "Штат",
+      shortBio: "Қысқаша сипаттама",
+      story: "Сіздің әңгімеңіз",
+      goals: "Мақсаттар",
+      goalsHint: "Әр жолда бір мақсат.",
+      target: "Мақсатты сома (USD)",
+      urgency: "Шұғылдық",
+      low: "Төмен",
+      medium: "Орташа",
+      high: "Жоғары",
+      submit: "Тексеруге жіберу",
+      submitting: "Жіберілуде…",
+      success: "Жіберілді! Науқаныңыз модератор тексеруін күтуде.",
+      error: "Жіберу мүмкін болмады. Қайта көріңіз.",
+    },
+    moderation: {
+      title: "Модерация",
+      sub: "Күтудегі қаражат жинау науқандарын қарап, мақұлдаңыз.",
+      notAuthorized: "Бұл бетке кіруге рұқсатыңыз жоқ.",
+      empty: "Тексеруді күтетін науқан жоқ.",
+      approve: "Мақұлдау",
+      reject: "Бас тарту",
+      pending: "Күтуде",
+      target: "Мақсат",
+      loadError: "Науқандарды жүктеу мүмкін болмады.",
     },
     campaign: {
       back: "← Науқандарға оралу",
@@ -583,6 +694,7 @@ export const translations: Record<Locale, Dictionary> = {
       signIn: "Войти",
       join: "Вступить",
       account: "Профиль",
+      moderation: "Модерация",
     },
     theme: { toLight: "Светлая тема", toDark: "Тёмная тема" },
     hero: {
@@ -703,6 +815,42 @@ export const translations: Record<Locale, Dictionary> = {
       verified: "Проверено",
       urgencySuffix: "срочность",
       all: "Все",
+      start: "Начать кампанию",
+    },
+    campaignNew: {
+      title: "Начать кампанию",
+      intro: "Отправьте кампанию на проверку. Модераторы подтверждают письма о зачислении и данные об оплате обучения перед публикацией.",
+      loginRequired: "Войдите, чтобы начать кампанию.",
+      studentName: "Ваше имя",
+      university: "Университет",
+      major: "Специальность",
+      degree: "Уровень степени",
+      selectDegree: "Выберите степень",
+      state: "Штат",
+      shortBio: "Краткое описание",
+      story: "Ваша история",
+      goals: "Цели",
+      goalsHint: "По одной цели в строке.",
+      target: "Целевая сумма (USD)",
+      urgency: "Срочность",
+      low: "Низкая",
+      medium: "Средняя",
+      high: "Высокая",
+      submit: "Отправить на проверку",
+      submitting: "Отправка…",
+      success: "Отправлено! Кампания ожидает проверки модератором.",
+      error: "Не удалось отправить. Попробуйте снова.",
+    },
+    moderation: {
+      title: "Модерация",
+      sub: "Проверяйте и одобряйте кампании, ожидающие публикации.",
+      notAuthorized: "У вас нет доступа к этой странице.",
+      empty: "Нет кампаний на проверке.",
+      approve: "Одобрить",
+      reject: "Отклонить",
+      pending: "На проверке",
+      target: "Цель",
+      loadError: "Не удалось загрузить кампании.",
     },
     campaign: {
       back: "← Назад к кампаниям",

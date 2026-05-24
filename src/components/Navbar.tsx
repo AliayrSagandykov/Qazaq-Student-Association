@@ -9,14 +9,33 @@ import { LanguageSwitcher, ThemeToggle } from "@/components/Controls";
 export default function Navbar() {
   const { t } = useApp();
   const [signedIn, setSignedIn] = useState(false);
+  const [isModerator, setIsModerator] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
     if (!supabase) return;
-    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
-      setSignedIn(Boolean(session?.user)),
-    );
+
+    async function checkRole(userId: string | undefined) {
+      if (!userId || !supabase) {
+        setIsModerator(false);
+        return;
+      }
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("user_id", userId)
+        .maybeSingle();
+      setIsModerator(data?.role === "moderator" || data?.role === "admin");
+    }
+
+    supabase.auth.getUser().then(({ data }) => {
+      setSignedIn(Boolean(data.user));
+      checkRole(data.user?.id);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setSignedIn(Boolean(session?.user));
+      checkRole(session?.user?.id);
+    });
     return () => sub.subscription.unsubscribe();
   }, [supabase]);
 
@@ -24,6 +43,7 @@ export default function Navbar() {
     { href: "/directory", label: t.nav.directory },
     { href: "/events", label: t.nav.events },
     { href: "/crowdfunding", label: t.nav.crowdfunding },
+    ...(isModerator ? [{ href: "/moderation", label: t.nav.moderation }] : []),
   ];
 
   return (

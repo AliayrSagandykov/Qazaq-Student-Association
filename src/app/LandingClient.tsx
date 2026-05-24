@@ -257,7 +257,7 @@ export default function LandingClient({
               <Link href="/login" className="btn-primary">
                 {t.cta.primary}
               </Link>
-              <Link href="/crowdfunding" className="btn-ghost">
+              <Link href="/crowdfunding/new" className="btn-ghost">
                 {t.cta.secondary}
               </Link>
             </div>
