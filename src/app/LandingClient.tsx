@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Avatar from "@/components/Avatar";
+import MemberCard from "@/components/MemberCard";
 import Progress from "@/components/Progress";
 import Tr from "@/components/Tr";
 import { createClient } from "@/lib/supabase/client";
@@ -138,13 +139,7 @@ export default function LandingClient({
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map((m, i) => (
             <Reveal key={m.id} delay={i * 0.05}>
-              <Link href={`/members/${m.id}`} className="card block h-full p-6 transition hover:border-line/30">
-                <Avatar initials={m.initials} src={m.avatarUrl} size="lg" />
-                <h3 className="mt-4 font-semibold text-fg">{m.name}</h3>
-                <p className="text-sm text-fg-muted">{m.major}</p>
-                <p className="mt-1 text-xs text-fg-muted/70">{m.university}</p>
-                <p className="mt-3 text-sm text-fg-muted"><Tr>{m.bio}</Tr></p>
-              </Link>
+              <MemberCard m={m} variant="compact" />
             </Reveal>
           ))}
         </div>

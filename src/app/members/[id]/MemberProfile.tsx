@@ -36,24 +36,22 @@ export default function MemberProfile({ m, preview = false }: { m: Member; previ
             ) : (
               <div className="h-40 bg-gradient-to-br from-accent/30 via-accent-steppe/20 to-accent-gold/20" />
             )}
-            <div className="p-6">
-              <div className="-mt-14 flex items-end justify-between gap-4">
-                <div className="flex items-end gap-4">
-                  <Avatar initials={m.initials} src={m.avatarUrl} size="lg" />
-                  <div className="pb-1">
-                    <h1 className="text-2xl font-bold text-fg">{m.name}</h1>
-                    <p className="text-sm text-fg-muted">
-                      {[m.major, m.degree, m.university].filter(Boolean).join(" · ")}
-                    </p>
-                  </div>
-                </div>
+            <div className="px-6 pb-6">
+              <div className="-mt-14 flex items-end justify-between">
+                <span className="rounded-full ring-4 ring-surface">
+                  <Avatar initials={m.initials} src={m.avatarUrl} size="xl" />
+                </span>
                 {isOwn && (
-                  <Link href="/account" className="btn-ghost !px-4 !py-1.5 !text-xs">
+                  <Link href="/account" className="btn-ghost mb-1 !px-4 !py-1.5 !text-xs">
                     {t.member.edit}
                   </Link>
                 )}
               </div>
-              {m.isAlumni && <span className="chip mt-4">{t.member.alumni}</span>}
+              <h1 className="mt-4 text-2xl font-bold text-fg">{m.name}</h1>
+              <p className="mt-1 text-sm text-fg-muted">
+                {[m.major, m.degree, m.university].filter(Boolean).join(" · ")}
+              </p>
+              {m.isAlumni && <span className="chip mt-3">{t.member.alumni}</span>}
             </div>
           </div>
 

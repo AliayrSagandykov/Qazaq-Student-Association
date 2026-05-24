@@ -5,10 +5,16 @@ export default function Avatar({
 }: {
   initials: string;
   src?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
 }) {
   const dims =
-    size === "lg" ? "h-16 w-16 text-xl" : size === "sm" ? "h-9 w-9 text-xs" : "h-12 w-12 text-sm";
+    size === "xl"
+      ? "h-24 w-24 text-3xl"
+      : size === "lg"
+        ? "h-16 w-16 text-xl"
+        : size === "sm"
+          ? "h-9 w-9 text-xs"
+          : "h-12 w-12 text-sm";
 
   if (src) {
     // eslint-disable-next-line @next/next/no-img-element
