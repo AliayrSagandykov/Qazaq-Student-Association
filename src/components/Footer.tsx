@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useApp } from "@/components/Providers";
 
-const CONTRIBUTORS = ["Aliyar Sagandykov", "Aimer Koshmambetov", "Amir Nurgali"];
-
 export default function Footer() {
   const { t } = useApp();
   return (
@@ -54,16 +52,6 @@ export default function Footer() {
             </li>
           </ul>
         </div>
-      </div>
-
-      <div className="container-page border-t border-line/10 py-8 text-center">
-        <h4 className="text-sm font-semibold tracking-wide text-fg">
-          {t.footer.hallOfContributors}
-        </h4>
-        <p className="mt-3 text-sm text-fg-muted">
-          {`· ${CONTRIBUTORS.join(" · ")}`}
-        </p>
-        <p className="mt-2 text-sm text-fg-muted/70">·</p>
       </div>
 
       <div className="container-page border-t border-line/10 py-6 text-center text-xs text-fg-muted/70 sm:text-left">
