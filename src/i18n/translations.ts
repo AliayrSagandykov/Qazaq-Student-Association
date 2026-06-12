@@ -94,8 +94,7 @@ export interface Dictionary {
     clubs: string;
     mentorship: string;
     scholarships: string;
-    founders: string;
-    founderRole: string;
+    hallOfContributors: string;
   };
   directory: {
     title: string;
@@ -440,12 +439,11 @@ export const translations: Record<Locale, Dictionary> = {
       made: "Built for the diaspora, by the diaspora.",
       mission: "Mission",
       sponsors: "Sponsors",
-      contact: "Contacts",
+      contact: "Contact",
       clubs: "Clubs & Organizations",
       mentorship: "Mentorship",
       scholarships: "Scholarships",
-      founders: "Founders",
-      founderRole: "Co-founder",
+      hallOfContributors: "Hall of Contributors",
     },
     directory: {
       title: "Community Directory",
@@ -789,12 +787,11 @@ export const translations: Record<Locale, Dictionary> = {
       made: "Диаспора үшін, диаспора қолымен жасалған.",
       mission: "Миссия",
       sponsors: "Демеушілер",
-      contact: "Байланыстар",
+      contact: "Байланыс",
       clubs: "Клубтар мен ұйымдар",
       mentorship: "Тәлімгерлік",
       scholarships: "Стипендиялар",
-      founders: "Негізін қалаушылар",
-      founderRole: "Тең негізін қалаушы",
+      hallOfContributors: "Үлес қосушылар залы",
     },
     directory: {
       title: "Қоғамдастық каталогы",
@@ -1142,8 +1139,7 @@ export const translations: Record<Locale, Dictionary> = {
       clubs: "Клубы и организации",
       mentorship: "Наставничество",
       scholarships: "Стипендии",
-      founders: "Основатели",
-      founderRole: "Сооснователь",
+      hallOfContributors: "Зал контрибьюторов",
     },
     directory: {
       title: "Каталог сообщества",
