@@ -21,6 +21,8 @@ const FOUNDERS = [
   },
 ];
 
+const CONTRIBUTORS = ["Aliyar Sagandykov", "Aimer Koshmambetov", "Amir Nurgali"];
+
 export default function ContactPage() {
   const { t } = useApp();
 
@@ -29,11 +31,7 @@ export default function ContactPage() {
       <h1 className="text-3xl font-bold sm:text-4xl">{t.contactPage.title}</h1>
       <p className="mt-3 max-w-2xl text-fg-muted">{t.contactPage.sub}</p>
 
-      <h2 className="mt-12 text-sm font-semibold uppercase tracking-wide text-fg-muted/70">
-        {t.contactPage.foundersHeading}
-      </h2>
-
-      <div className="mt-4 grid gap-5 md:grid-cols-2">
+      <div className="mt-10 grid gap-5 md:grid-cols-2">
         {FOUNDERS.map((f) => (
           <div key={f.email} className="card p-6">
             <h3 className="text-lg font-semibold text-fg">{f.name}</h3>
@@ -81,6 +79,16 @@ export default function ContactPage() {
           </div>
         ))}
       </div>
+
+      <section className="mt-16 border-t border-line/10 pt-10 text-center">
+        <h2 className="text-sm font-semibold tracking-wide text-fg">
+          {t.footer.hallOfContributors}
+        </h2>
+        <p className="mt-3 text-sm text-fg-muted">
+          {`· ${CONTRIBUTORS.join(" · ")}`}
+        </p>
+        <p className="mt-2 text-sm text-fg-muted/70">·</p>
+      </section>
     </div>
   );
 }
