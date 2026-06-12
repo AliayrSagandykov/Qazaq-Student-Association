@@ -77,7 +77,7 @@ export default function LandingClient({
       </section>
 
       {/* Mission + Vision */}
-      <section className="container-page grid gap-4 py-10 md:grid-cols-2">
+      <section id="mission" className="container-page grid scroll-mt-24 gap-4 py-10 md:grid-cols-2">
         {[t.mission, t.vision].map((b, i) => (
           <Reveal key={b.heading} delay={i * 0.05}>
             <div className="card h-full p-8">

@@ -3,6 +3,25 @@
 import Link from "next/link";
 import { useApp } from "@/components/Providers";
 
+const FOUNDERS = [
+  {
+    name: "Aimer Koshmambetov",
+    phone: "+7 708 414 4773",
+    phoneHref: "tel:+77084144773",
+    email: "aimerkoshmambetov@gmail.com",
+    telegram: "@Aimer_Koshmambetov",
+    telegramHref: "https://t.me/Aimer_Koshmambetov",
+  },
+  {
+    name: "Aliyar Sagandykov",
+    phone: "+7 778 165 3434",
+    phoneHref: "tel:+77781653434",
+    email: "celoveka57@gmail.com",
+    telegram: "@Aliyar_Sagandykov",
+    telegramHref: "https://t.me/Aliyar_Sagandykov",
+  },
+];
+
 export default function Footer() {
   const { t } = useApp();
   return (
@@ -16,6 +35,13 @@ export default function Footer() {
             <span>QSA</span>
           </div>
           <p className="mt-3 max-w-xs text-sm text-fg-muted">{t.footer.tagline}</p>
+          <ul className="mt-4 space-y-2 text-sm text-fg-muted">
+            <li>
+              <Link href="/#mission" className="hover:text-fg">
+                {t.footer.mission}
+              </Link>
+            </li>
+          </ul>
         </div>
 
         <div>
@@ -37,11 +63,33 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-fg">{t.footer.about}</h4>
-          <ul className="mt-3 space-y-2 text-sm text-fg-muted">
-            <li>{t.footer.mission}</li>
-            <li>{t.footer.sponsors}</li>
-            <li>{t.footer.contact}</li>
+          <h4 className="text-sm font-semibold text-fg">{t.footer.contact}</h4>
+          <p className="mt-3 text-xs uppercase tracking-wide text-fg-muted/70">
+            {t.footer.founders}
+          </p>
+          <ul className="mt-2 space-y-5 text-sm text-fg-muted">
+            {FOUNDERS.map((f) => (
+              <li key={f.email}>
+                <p className="font-semibold text-fg">{f.name}</p>
+                <p className="text-xs text-fg-muted/70">{t.footer.founderRole}</p>
+                <div className="mt-1 flex flex-col gap-0.5">
+                  <a href={f.phoneHref} className="hover:text-fg">
+                    {f.phone}
+                  </a>
+                  <a href={`mailto:${f.email}`} className="break-all hover:text-fg">
+                    {f.email}
+                  </a>
+                  <a
+                    href={f.telegramHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-fg"
+                  >
+                    {f.telegram}
+                  </a>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

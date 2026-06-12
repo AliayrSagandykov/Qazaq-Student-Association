@@ -1,11 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Avatar from "@/components/Avatar";
 import Progress, { formatUSD } from "@/components/Progress";
 import Tr from "@/components/Tr";
 import { useApp } from "@/components/Providers";
+import { createClient } from "@/lib/supabase/client";
 import type { Campaign } from "@/lib/data";
 import DonatePanel from "./DonatePanel";
 
@@ -16,16 +18,73 @@ function youtubeId(url: string): string | null {
 
 export default function CampaignDetail({ c }: { c: Campaign }) {
   const { t } = useApp();
+  const router = useRouter();
   const donated = useSearchParams().get("donated") === "1";
   const publicDonors = [...c.donors].sort((a, b) => b.amount - a.amount);
   const images = c.images ?? [];
   const videoId = c.videoUrl ? youtubeId(c.videoUrl) : null;
 
+  const [canManage, setCanManage] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+    let active = true;
+    (async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!active || !auth.user) return;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("user_id", auth.user.id)
+        .maybeSingle();
+      if (!active) return;
+      const role = profile?.role;
+      setCanManage(role === "admin" || role === "moderator");
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function confirmDelete() {
+    const supabase = createClient();
+    if (!supabase) return;
+    setDeleting(true);
+    setDeleteError(false);
+    const { error } = await supabase.from("campaigns").delete().eq("id", c.id);
+    if (error) {
+      setDeleting(false);
+      setDeleteError(true);
+      return;
+    }
+    setConfirmOpen(false);
+    router.push("/crowdfunding");
+    router.refresh();
+  }
+
   return (
     <div className="container-page py-12">
-      <Link href="/crowdfunding" className="text-sm text-accent hover:underline">
-        {t.campaign.back}
-      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Link href="/crowdfunding" className="text-sm text-accent hover:underline">
+          {t.campaign.back}
+        </Link>
+        {canManage && (
+          <button
+            type="button"
+            onClick={() => {
+              setDeleteError(false);
+              setConfirmOpen(true);
+            }}
+            className="rounded-lg border border-red-500/40 px-3 py-1.5 text-sm font-medium text-red-500 transition hover:bg-red-500/10"
+          >
+            {t.campaign.delete}
+          </button>
+        )}
+      </div>
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[1.7fr_1fr]">
         <div>
@@ -142,6 +201,55 @@ export default function CampaignDetail({ c }: { c: Campaign }) {
           </div>
         </aside>
       </div>
+
+      {confirmOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-confirm-title"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => {
+            if (!deleting) setConfirmOpen(false);
+          }}
+        >
+          <div
+            className="card w-full max-w-md p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="delete-confirm-title" className="text-lg font-semibold text-fg">
+              {t.campaign.confirmDeleteTitle}
+            </h2>
+            <p className="mt-2 text-sm text-fg-muted">{t.campaign.confirmDelete}</p>
+            <p className="mt-4 text-sm text-fg">
+              <span className="font-semibold">{c.studentName}</span>
+              <span className="text-fg-muted"> · {c.university}</span>
+            </p>
+            {deleteError && (
+              <p className="mt-3 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-500">
+                {t.campaign.deleteError}
+              </p>
+            )}
+            <div className="mt-6 flex flex-wrap justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setConfirmOpen(false)}
+                disabled={deleting}
+                className="btn-ghost !py-2 disabled:opacity-60"
+              >
+                {t.campaign.confirmNo}
+              </button>
+              <button
+                type="button"
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="rounded-xl bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60"
+              >
+                {deleting ? t.campaign.deleting : t.campaign.confirmYes}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
