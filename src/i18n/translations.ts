@@ -94,6 +94,8 @@ export interface Dictionary {
     clubs: string;
     mentorship: string;
     scholarships: string;
+    founders: string;
+    founderRole: string;
   };
   directory: {
     title: string;
@@ -240,6 +242,13 @@ export interface Dictionary {
     donatedSuccess: string;
     gallery: string;
     video: string;
+    delete: string;
+    deleting: string;
+    confirmDeleteTitle: string;
+    confirmDelete: string;
+    confirmYes: string;
+    confirmNo: string;
+    deleteError: string;
   };
   login: {
     welcome: string;
@@ -431,10 +440,12 @@ export const translations: Record<Locale, Dictionary> = {
       made: "Built for the diaspora, by the diaspora.",
       mission: "Mission",
       sponsors: "Sponsors",
-      contact: "Contact",
+      contact: "Contacts",
       clubs: "Clubs & Organizations",
       mentorship: "Mentorship",
       scholarships: "Scholarships",
+      founders: "Founders",
+      founderRole: "Co-founder",
     },
     directory: {
       title: "Community Directory",
@@ -581,6 +592,13 @@ export const translations: Record<Locale, Dictionary> = {
       donatedSuccess: "Thank you for your donation! It may take a moment to appear.",
       gallery: "Gallery",
       video: "Video",
+      delete: "Delete campaign",
+      deleting: "Deleting…",
+      confirmDeleteTitle: "Delete this campaign?",
+      confirmDelete: "This will permanently remove the campaign, its updates, and donor history. This action cannot be undone.",
+      confirmYes: "Yes, delete",
+      confirmNo: "No, keep it",
+      deleteError: "Could not delete. Please try again.",
     },
     login: {
       welcome: "Welcome back",
@@ -771,10 +789,12 @@ export const translations: Record<Locale, Dictionary> = {
       made: "Диаспора үшін, диаспора қолымен жасалған.",
       mission: "Миссия",
       sponsors: "Демеушілер",
-      contact: "Байланыс",
+      contact: "Байланыстар",
       clubs: "Клубтар мен ұйымдар",
       mentorship: "Тәлімгерлік",
       scholarships: "Стипендиялар",
+      founders: "Негізін қалаушылар",
+      founderRole: "Тең негізін қалаушы",
     },
     directory: {
       title: "Қоғамдастық каталогы",
@@ -921,6 +941,13 @@ export const translations: Record<Locale, Dictionary> = {
       donatedSuccess: "Қайырымдылығыңызға рақмет! Көріну үшін біраз уақыт кетуі мүмкін.",
       gallery: "Галерея",
       video: "Видео",
+      delete: "Науқанды жою",
+      deleting: "Жойылуда…",
+      confirmDeleteTitle: "Науқанды жоясыз ба?",
+      confirmDelete: "Бұл әрекет науқанды, оның жаңартулары мен демеушілер тарихын біржолата жояды. Әрекетті кері қайтару мүмкін емес.",
+      confirmYes: "Иә, жою",
+      confirmNo: "Жоқ, қалдыру",
+      deleteError: "Жою мүмкін болмады. Қайта көріңіз.",
     },
     login: {
       welcome: "Қайта келдіңіз",
@@ -1115,6 +1142,8 @@ export const translations: Record<Locale, Dictionary> = {
       clubs: "Клубы и организации",
       mentorship: "Наставничество",
       scholarships: "Стипендии",
+      founders: "Основатели",
+      founderRole: "Сооснователь",
     },
     directory: {
       title: "Каталог сообщества",
@@ -1261,6 +1290,13 @@ export const translations: Record<Locale, Dictionary> = {
       donatedSuccess: "Спасибо за пожертвование! Оно появится через мгновение.",
       gallery: "Галерея",
       video: "Видео",
+      delete: "Удалить кампанию",
+      deleting: "Удаление…",
+      confirmDeleteTitle: "Удалить эту кампанию?",
+      confirmDelete: "Это действие безвозвратно удалит кампанию, её обновления и историю донатов. Действие нельзя отменить.",
+      confirmYes: "Да, удалить",
+      confirmNo: "Нет, оставить",
+      deleteError: "Не удалось удалить. Попробуйте снова.",
     },
     login: {
       welcome: "С возвращением",
