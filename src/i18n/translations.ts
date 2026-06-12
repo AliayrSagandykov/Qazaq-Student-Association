@@ -317,6 +317,15 @@ export interface Dictionary {
     cancel: string;
     saving: string;
   };
+  contactPage: {
+    title: string;
+    sub: string;
+    foundersHeading: string;
+    role: string;
+    phone: string;
+    email: string;
+    telegram: string;
+  };
 }
 
 export const translations: Record<Locale, Dictionary> = {
@@ -666,6 +675,15 @@ export const translations: Record<Locale, Dictionary> = {
       cancel: "Cancel",
       saving: "Saving…",
     },
+    contactPage: {
+      title: "Contact us",
+      sub: "Reach out to the founding team — we read every message and reply personally.",
+      foundersHeading: "Founders",
+      role: "Co-founder",
+      phone: "Phone",
+      email: "Email",
+      telegram: "Telegram",
+    },
   },
 
   kk: {
@@ -1014,6 +1032,15 @@ export const translations: Record<Locale, Dictionary> = {
       cancel: "Бас тарту",
       saving: "Сақталуда…",
     },
+    contactPage: {
+      title: "Бізбен байланыс",
+      sub: "Негізін қалаушы топпен хабарласыңыз — әр хатты оқып, жеке өзіміз жауап береміз.",
+      foundersHeading: "Негізін қалаушылар",
+      role: "Тең негізін қалаушы",
+      phone: "Телефон",
+      email: "Эл. пошта",
+      telegram: "Telegram",
+    },
   },
 
   ru: {
@@ -1361,6 +1388,15 @@ export const translations: Record<Locale, Dictionary> = {
       save: "Сохранить",
       cancel: "Отмена",
       saving: "Сохранение…",
+    },
+    contactPage: {
+      title: "Связаться с нами",
+      sub: "Напишите команде основателей — мы читаем каждое сообщение и отвечаем лично.",
+      foundersHeading: "Основатели",
+      role: "Сооснователь",
+      phone: "Телефон",
+      email: "Эл. почта",
+      telegram: "Telegram",
     },
   },
 };

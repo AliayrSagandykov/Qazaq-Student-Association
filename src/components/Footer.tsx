@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useApp } from "@/components/Providers";
 
 const CONTRIBUTORS = ["Aliyar Sagandykov", "Aimer Koshmambetov", "Amir Nurgali"];
-const PRIMARY_CONTACT_EMAIL = "aimerkoshmambetov@gmail.com";
 
 export default function Footer() {
   const { t } = useApp();
@@ -49,9 +48,9 @@ export default function Footer() {
             </li>
             <li>{t.footer.sponsors}</li>
             <li>
-              <a href={`mailto:${PRIMARY_CONTACT_EMAIL}`} className="hover:text-fg">
+              <Link href="/contact" className="hover:text-fg">
                 {t.footer.contact}
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -67,9 +66,8 @@ export default function Footer() {
         <p className="mt-2 text-sm text-fg-muted/70">·</p>
       </div>
 
-      <div className="container-page flex flex-col items-center justify-between gap-3 border-t border-line/10 py-6 text-xs text-fg-muted/70 sm:flex-row">
-        <span>© {new Date().getFullYear()} Qazaq Students Association. {t.footer.rights}</span>
-        <span>{t.footer.made}</span>
+      <div className="container-page border-t border-line/10 py-6 text-center text-xs text-fg-muted/70 sm:text-left">
+        © {new Date().getFullYear()} Qazaq Students Association. {t.footer.rights}
       </div>
     </footer>
   );
